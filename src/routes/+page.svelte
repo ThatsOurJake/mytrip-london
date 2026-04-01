@@ -3,6 +3,7 @@
 	import openStreetMapLogo from '$lib/assets/openstreetmap.svg';
 	import tflLogo from '$lib/assets/transportforlondon.svg';
 	import AppIcon from '$lib/components/planner/AppIcon.svelte';
+	import { PRIMARY_BUTTON_CLASS, PRIMARY_BUTTON_DISABLED_CLASS, SECONDARY_BUTTON_CLASS } from '$lib/components/planner/button-classes';
 	import { plannerStore } from '$lib/stores';
 	import { ConflictPanel, ItineraryTimeline, PlannerForm, StopsTable } from '$lib/components/planner';
 	import type { Place, RouteDataSource, TransportMode, TransportPreference } from '$lib/types/planner';
@@ -117,12 +118,12 @@
 		</p>
 
 		<div class="mt-5 flex flex-wrap gap-3">
-			<a href="#planner-setup" class="cursor-pointer rounded-lg bg-slate-900 px-4 py-2 font-medium text-white hover:bg-slate-700">
+			<a href="#planner-setup" class={PRIMARY_BUTTON_CLASS}>
 				Start planning
 			</a>
 			<button
 				type="button"
-				class="cursor-pointer rounded-lg bg-white px-4 py-2 font-medium text-slate-900 ring-1 ring-slate-300 hover:bg-slate-100"
+				class={`${SECONDARY_BUTTON_CLASS} rounded-lg px-4 py-2 text-slate-900 ring-1 ring-slate-300`}
 				onclick={() => planner.reset()}
 				disabled={$planner.input.places.length === 0 && !$planner.result}
 			>
@@ -170,10 +171,10 @@
 
 			<div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm" aria-label="Quick actions">
 				<p class="text-sm text-slate-700">Finished adding stops? Next step is to generate that itinerary.</p>
-				<div class="mt-2 flex gap-2">
+				<div class="mt-2 flex flex-wrap gap-2">
 					<button
 						type="button"
-						class="cursor-pointer rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+						class={PRIMARY_BUTTON_DISABLED_CLASS}
 						onclick={optimize}
 						disabled={$planner.isRunning || $planner.input.places.length === 0}
 					>
@@ -184,7 +185,7 @@
 					{@const status = optimizationStatusMessage($planner.input.settings.dataSource ?? 'auto')}
 					<div class="mt-3 rounded-xl border border-sky-200 bg-sky-50 p-3 text-sky-950" role="status" aria-live="polite">
 						<div class="flex items-start gap-3">
-							<div class="mt-0.5 rounded-full bg-white p-1.5 text-sky-700 ring-1 ring-sky-200">
+							<div class="mt-0.5 text-sky-700">
 								<span class="loading-icon inline-flex"><AppIcon path={mdiLoading} size={16} decorative={true} /></span>
 							</div>
 							<div class="min-w-0">

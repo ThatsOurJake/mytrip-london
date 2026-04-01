@@ -3,6 +3,7 @@
 	import { VISIT_TIME_FIELD_LABEL, VISIT_TIME_STOP_INFO, visitTimeSummary } from '$lib/services/planner/ui-text';
 	import FieldLabel from './FieldLabel.svelte';
 	import InfoPopover from './InfoPopover.svelte';
+	import SeparatorDot from './SeparatorDot.svelte';
 	import type { Place, TripPlanningDay } from '$lib/types/planner';
 
 	let {
@@ -122,10 +123,10 @@
 							</h3>
 							<p class="flex flex-wrap items-center text-xs text-slate-600" style={preferredDaySummaryStyle(place)}>
 								<span>{visitTimeSummary(place.constraint.minimumDwellMinutes)}</span>
-								<span class="mx-1.5 text-current/60" aria-hidden="true">•</span>
+								<SeparatorDot toneClass="text-current/60" />
 								<span>Priority {place.constraint.priority}</span>
 								{#if planningDays.length > 1}
-									<span class="mx-1.5 text-current/60" aria-hidden="true">•</span>
+									<SeparatorDot toneClass="text-current/60" />
 									<span>{preferredDaySummary(place)}</span>
 								{/if}
 							</p>

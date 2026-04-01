@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { mdiAlertOutline, mdiOpenInNew } from '@mdi/js';
 	import AppIcon from '$lib/components/planner/AppIcon.svelte';
+	import { PRIMARY_BUTTON_CLASS } from '$lib/components/planner/button-classes';
 	import ConflictPanel from '$lib/components/planner/ConflictPanel.svelte';
 	import ItineraryTimeline from '$lib/components/planner/ItineraryTimeline.svelte';
 	import { plannerStore } from '$lib/stores';
@@ -45,7 +46,7 @@
 			<div class="mt-4 flex flex-wrap gap-3">
 				<button
 					type="button"
-					class="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 font-medium text-white hover:bg-slate-700"
+					class={PRIMARY_BUTTON_CLASS}
 					onclick={importIntoPlanner}
 				>
 					<AppIcon path={mdiOpenInNew} size={18} decorative={true} />

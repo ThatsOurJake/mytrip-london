@@ -1,12 +1,13 @@
 import type { RouteSegment, TransportMode } from '$lib/types/planner';
 import { distanceKm } from '$lib/services/utils';
 import { buildSegment, buildSingleLeg, type RouteLookupInput, type RoutingProvider } from './provider';
-
-const MAX_WALK_TO_TRANSIT_DISTANCE_KM = 0.7;
-const TRANSIT_ACCESS_DISTANCE_RATIO = 0.15;
-const DEFAULT_TRANSIT_SPEED_KMH = 24;
-const MIN_TRANSIT_LEG_MINUTES = 5;
-const DEFAULT_TRANSIT_WAIT_MINUTES = 6;
+import {
+  DEFAULT_TRANSIT_SPEED_KMH,
+  DEFAULT_TRANSIT_WAIT_MINUTES,
+  MAX_WALK_TO_TRANSIT_DISTANCE_KM,
+  MIN_TRANSIT_LEG_MINUTES,
+  TRANSIT_ACCESS_DISTANCE_RATIO
+} from './constants';
 
 const MODE_SPEED_KMH: Record<Exclude<TransportMode, 'mixed'>, number> = {
   walking: 4.8,
@@ -34,7 +35,7 @@ export const heuristicRoutingProvider: RoutingProvider = {
 
       return buildSegment(input, [
         buildSingleLeg('walk', walkInMinutes, walkToTransitDistance, 'Walk to nearest station'),
-        buildSingleLeg('transit', waitingMinutes, 0, 'Wait for transit connection'),
+        buildSingleLeg('wait', waitingMinutes, 0, 'Wait for the next public transport connection'),
         buildSingleLeg('transit', transitMinutes, transitDistance, 'Ride public transport'),
         buildSingleLeg('walk', walkOutMinutes, walkFromTransitDistance, 'Walk to destination')
       ], 'heuristic', {

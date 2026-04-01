@@ -225,15 +225,15 @@
 	});
 </script>
 
-<section aria-labelledby="itinerary-map-title" class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+<section aria-labelledby="itinerary-map-title" aria-describedby="itinerary-map-description itinerary-map-summary" class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
 	<div>
 		<h3 id="itinerary-map-title" class="text-base font-semibold text-slate-900">Map overview</h3>
-		<p class="mt-1 text-sm text-slate-700">
+		<p id="itinerary-map-description" class="mt-1 text-sm text-slate-700">
 			Use your mouse wheel or trackpad to zoom. When live geometry is available from TfL or OpenStreet routing, the map draws that route instead of a simple stop-order line.
 		</p>
 	</div>
 
-	<p class="sr-only">{announcedSummary}</p>
+	<p id="itinerary-map-summary" class="sr-only">{announcedSummary}</p>
 	<div bind:this={mapElement} class="mt-4 h-72 w-full overflow-hidden rounded-xl border border-slate-200 sm:h-80 lg:h-96" aria-hidden="true"></div>
 </section>
 

@@ -43,6 +43,9 @@ interface TflJourneyResponse {
       };
       path?: {
         lineString?: string;
+        stopPoints?: Array<{
+          name?: string;
+        }>;
       };
       routeOptions?: Array<{
         lineIdentifier?: {
@@ -51,6 +54,10 @@ interface TflJourneyResponse {
           type?: string;
         };
       }>;
+      scheduledDepartureTime?: string;
+      scheduledArrivalTime?: string;
+      interChangeDuration?: string;
+      interChangePosition?: string;
     }>;
   }>;
 }
@@ -362,7 +369,9 @@ function geometryForTflJourney(legs: TflJourneyLeg[], input: RouteLookupInput): 
 }
 
 function mapTflJourneyLegs(legs: TflJourneyLeg[]): SegmentLeg[] {
-  return legs.map((leg) => {
+  const mappedLegs: SegmentLeg[] = [];
+
+  legs.forEach((leg, index) => {
     const mappedMode = mapTflMode(leg.mode.name);
     const fromStop = leg.departurePoint?.commonName;
     const toStop = leg.arrivalPoint?.commonName;
@@ -374,13 +383,29 @@ function mapTflJourneyLegs(legs: TflJourneyLeg[]): SegmentLeg[] {
         ? `${modeName} from ${fromStop} to ${toStop}`
         : leg.instruction.summary || modeName;
 
-    return {
+    mappedLegs.push({
       ...buildSingleLeg(mappedMode, leg.duration ?? 0, normalizeTflDistanceKm(leg.distance), detail),
       originName: fromStop,
       destinationName: toStop,
-      lineIdentifier
-    };
+      lineIdentifier,
+      scheduledDepartureTime: leg.scheduledDepartureTime,
+      scheduledArrivalTime: leg.scheduledArrivalTime,
+      intermediateStopNames: leg.path?.stopPoints
+        ?.map((stopPoint) => stopPoint.name?.trim())
+        .filter((name): name is string => Boolean(name))
+    });
+
+    const interchangeMinutes = Number.parseInt(leg.interChangeDuration ?? '', 10);
+    if (Number.isFinite(interchangeMinutes) && interchangeMinutes > 0 && index < legs.length - 1) {
+      mappedLegs.push({
+        ...buildSingleLeg('wait', interchangeMinutes, 0, 'Change here and wait for the next service'),
+        originName: toStop,
+        destinationName: toStop
+      });
+    }
   });
+
+  return mappedLegs;
 }
 
 export async function estimateOrsSegment(input: RouteLookupInput): Promise<RouteSegment | null> {

@@ -294,14 +294,14 @@ function createPlannerStore() {
         const result = await runPlanner(snapshot);
         update((state) => mergeState(state, { result, isRunning: false }));
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'Failed to optimize itinerary.';
+        const message = error instanceof Error ? error.message : 'Failed to optimise itinerary.';
         update((state) => mergeState(state, { error: message, isRunning: false }));
       }
     },
     exportPdf(): void {
       update((state) => {
         if (!state.result) {
-          return mergeState(state, { error: 'Run optimization before exporting a PDF.' });
+          return mergeState(state, { error: 'Run optimisation before exporting a PDF.' });
         }
 
         exportItineraryPdf(state.input, state.result);

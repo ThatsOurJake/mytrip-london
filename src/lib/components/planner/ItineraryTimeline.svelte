@@ -3,6 +3,7 @@
 	import { onMount, tick } from 'svelte';
 	import { buildSharedPlannerUrl } from '$lib/services/share/planner-share';
 	import type { PlannerInput, PlannerResult } from '$lib/types/planner';
+	import { SECONDARY_BUTTON_CLASS } from './button-classes';
 	import ItineraryMap from './ItineraryMap.svelte';
 	import ItinerarySummary from '$lib/components/planner/ItinerarySummary.svelte';
 	import ItineraryVisitList from '$lib/components/planner/ItineraryVisitList.svelte';
@@ -132,7 +133,7 @@
 		{/if}
 
 		<div class="mt-5 flex justify-end">
-			<button type="button" class="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100" onclick={scrollToTimelineTop}>
+			<button type="button" class={SECONDARY_BUTTON_CLASS} onclick={scrollToTimelineTop}>
 				Back to itinerary top
 			</button>
 		</div>

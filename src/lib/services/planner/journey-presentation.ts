@@ -114,13 +114,19 @@ export function predictedTflCostGbp(result: PlannerResult): number | null {
   }
 
   let totalFare = 0;
+  let knownFareCount = 0;
 
   for (const segment of tflSegments) {
     if (segment.fareGbp === null || segment.fareGbp === undefined || !Number.isFinite(segment.fareGbp)) {
-      return null;
+      continue;
     }
 
     totalFare += segment.fareGbp;
+    knownFareCount += 1;
+  }
+
+  if (knownFareCount === 0) {
+    return null;
   }
 
   return Number(totalFare.toFixed(2));
@@ -128,5 +134,19 @@ export function predictedTflCostGbp(result: PlannerResult): number | null {
 
 export function predictedTflCostLabel(result: PlannerResult): string {
   const totalFare = predictedTflCostGbp(result);
-  return totalFare === null ? '???' : `£${totalFare.toFixed(2)}`;
+
+  if (totalFare === null) {
+    return 'TfL fare unavailable';
+  }
+
+  const tflSegments = result.itinerary
+    .map((visit) => visit.travelFromPrevious)
+    .filter(
+      (segment): segment is RouteSegment => segment !== undefined && segment !== null && segment.source === 'tfl'
+    );
+  const completeFareCount = tflSegments.filter(
+    (segment) => segment.fareGbp !== null && segment.fareGbp !== undefined && Number.isFinite(segment.fareGbp)
+  ).length;
+
+  return completeFareCount < tflSegments.length ? `£${totalFare.toFixed(2)}+` : `£${totalFare.toFixed(2)}`;
 }

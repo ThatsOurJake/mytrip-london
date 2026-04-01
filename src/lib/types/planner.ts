@@ -18,7 +18,7 @@ export type TransitPreference = (typeof TRANSIT_PREFERENCES)[number];
 
 export type TransportPreference = 'walking' | 'cycling' | TransitPreference;
 
-export type SegmentMode = 'walk' | 'cycle' | 'transit';
+export type SegmentMode = 'walk' | 'cycle' | 'transit' | 'wait';
 
 export interface Coordinates {
   lat: number;
@@ -102,6 +102,9 @@ export interface SegmentLeg {
   originName?: string;
   destinationName?: string;
   lineIdentifier?: TransitLineIdentifier;
+  scheduledDepartureTime?: string;
+  scheduledArrivalTime?: string;
+  intermediateStopNames?: string[];
 }
 
 export interface RouteNode {

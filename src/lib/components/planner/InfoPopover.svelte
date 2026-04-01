@@ -41,6 +41,12 @@
     color: #0f766e;
   }
 
+  .info-trigger:focus-visible {
+    outline: 2px solid #0f766e;
+    outline-offset: 2px;
+    border-radius: 999px;
+  }
+
   .info-trigger::-webkit-details-marker {
     display: none;
   }
@@ -59,5 +65,13 @@
     font-size: 0.8rem;
     line-height: 1.35;
     box-shadow: 0 10px 25px rgb(15 23 42 / 0.12);
+  }
+
+  @media (max-width: 640px) {
+  .info-content {
+    left: auto;
+    right: 0;
+    width: min(18rem, calc(100vw - 2rem));
+  }
   }
 </style>

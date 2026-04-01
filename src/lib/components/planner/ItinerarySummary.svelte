@@ -9,6 +9,8 @@
 	import { formatDuration } from '$lib/services/utils';
 	import type { PlannerInput, PlannerResult } from '$lib/types/planner';
 	import AppIcon from './AppIcon.svelte';
+	import { SECONDARY_BUTTON_CLASS } from './button-classes';
+	import SeparatorDot from './SeparatorDot.svelte';
 	import { buildDaySummaries, dayUsageClasses, pillTitle, sourceList, sourceMeta, type DistanceUnit } from './itinerary-ui';
 	import { predictedTflCostLabel, transportPreferenceSummary } from '$lib/services/planner/journey-presentation';
 
@@ -127,9 +129,9 @@
 			class={`rounded-full border px-3 py-2 text-sm font-medium ${dayUsageClasses(daySummary.status)}`}
 		>
 			<span class="font-semibold">{daySummary.label}</span>
-			<span class="mx-1.5 text-current/70">•</span>
+			<SeparatorDot />
 			<span>{daySummary.stops} stop{daySummary.stops === 1 ? '' : 's'}</span>
-			<span class="mx-1.5 text-current/70">•</span>
+			<SeparatorDot />
 			<span>{daySummary.status}</span>
 		</div>
 	{/each}
@@ -161,7 +163,7 @@
 	<div class="flex flex-wrap items-center gap-2">
 		<button
 			type="button"
-			class="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100"
+			class={SECONDARY_BUTTON_CLASS}
 			onclick={onToggleMap}
 			aria-pressed={showMap}
 		>
@@ -171,7 +173,7 @@
 		{#if !previewMode && onExportPdf}
 			<button
 				type="button"
-				class="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100"
+				class={SECONDARY_BUTTON_CLASS}
 				onclick={onExportPdf}
 			>
 				<AppIcon path={mdiFilePdfBox} size={16} decorative={true} />
@@ -181,7 +183,7 @@
 		{#if shareEnabled}
 			<button
 				type="button"
-				class="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100"
+				class={SECONDARY_BUTTON_CLASS}
 				onclick={onCopyShareLink}
 			>
 				<AppIcon path={mdiShareVariantOutline} size={16} decorative={true} />
