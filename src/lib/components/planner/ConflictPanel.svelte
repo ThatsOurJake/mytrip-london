@@ -51,7 +51,7 @@
 					<li>Preferred-day warnings mean the planner had to place a stop on a different day.</li>
 					<li>Overnight warnings mean a fixed-time visit was moved to a later day to avoid missing it.</li>
 					<li>Day-end warnings mean the visit runs past the target finish time without breaking an explicit time rule.</li>
-					<li>Shortened-dwell warnings mean a booked visit starts on time but the place closes before the full stay can be completed.</li>
+					<li>Shortened-stay warnings mean a booked visit starts on time but the place closes before the full planned visit can be completed.</li>
 				</ul>
 			</div>
 		{/if}

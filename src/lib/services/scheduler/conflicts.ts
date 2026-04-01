@@ -28,7 +28,7 @@ export function createDwellConflict(
     placeName: place.name,
     type: 'minimum-dwell',
     requiredReductionMinutes,
-    message: `${place.name} causes a downstream clash. Reduce dwell by ${requiredReductionMinutes} minutes (to around ${allowedMinutes} minutes).`
+    message: `${place.name} causes a downstream clash. Reduce the planned visit time by ${requiredReductionMinutes} minutes (to around ${allowedMinutes} minutes).`
   };
 }
 

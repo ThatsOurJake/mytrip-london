@@ -2,6 +2,11 @@
 	import { mdiAlphaECircleOutline, mdiBike, mdiBusDoubleDecker, mdiSubway, mdiTrain, mdiWalk } from '@mdi/js';
 	import { DAY_PALETTE_OPTIONS, getDayPalette, paletteForDayIndex } from '$lib/services/planner/day-colors';
 	import { addDaysToIsoDate, todayIsoDate } from '$lib/services/planner/day-settings';
+	import {
+		VISIT_TIME_FIELD_LABEL,
+		VISIT_TIME_PLACE_INFO,
+		routeDataSourceLabel
+	} from '$lib/services/planner/ui-text';
 	import type { LocationSuggestion } from '$lib/services/geocode';
 	import {
 		TRANSIT_PREFERENCES,
@@ -14,6 +19,7 @@
 		type TripPlanningDay
 	} from '$lib/types/planner';
 	import AppIcon from './AppIcon.svelte';
+	import FieldLabel from './FieldLabel.svelte';
 	import InfoPopover from './InfoPopover.svelte';
 	import LocationAutocomplete from './LocationAutocomplete.svelte';
 
@@ -347,11 +353,11 @@
 
 	function dataSourceNotice(): string {
 		if (dataSource === 'openstreet' && mode === 'mixed') {
-			return 'OpenStreet routing does not include London public transport, so mixed trips may fall back to heuristic segments.';
+			return `${routeDataSourceLabel(dataSource)} routing does not include London public transport, so mixed trips may fall back to heuristic segments.`;
 		}
 
 		if (dataSource === 'tfl' && mode !== 'mixed') {
-			return 'TfL routing is strongest for public transport journeys. Walking or cycling-only trips may still fall back if needed.';
+			return `${routeDataSourceLabel(dataSource)} routing is strongest for public transport journeys. Walking or cycling-only trips may still fall back if needed.`;
 		}
 
 		return dataSourceOptions.find((option) => option.value === dataSource)?.description ?? '';
@@ -497,13 +503,13 @@
 			</div>
 			<div class="mt-4 grid gap-3 lg:grid-cols-2">
 				{#each planningDays as tripDay, index}
-					<div class="rounded-xl border p-4 shadow-sm" style={dayCardStyle(tripDay)}>
-						<div class="flex items-start justify-between gap-3">
-							<div>
+					<div class="min-w-0 rounded-xl border p-4 shadow-sm" style={dayCardStyle(tripDay)}>
+						<div class="flex flex-wrap items-start justify-between gap-3">
+							<div class="min-w-0">
 								<p class="text-sm font-semibold">{tripDay.label}</p>
 								<p class="text-xs opacity-80">{tripDay.date ?? 'Date not set'}</p>
 							</div>
-							<span class="rounded-full px-3 py-1 text-xs font-semibold" style={dayChipStyle(tripDay)}>{fullnessOptions.find((option) => option.value === tripDay.fullness)?.label ?? 'Full'}</span>
+							<span class="shrink-0 rounded-full px-3 py-1 text-xs font-semibold" style={dayChipStyle(tripDay)}>{fullnessOptions.find((option) => option.value === tripDay.fullness)?.label ?? 'Full'}</span>
 						</div>
 						<div class="mt-3 grid gap-3 sm:grid-cols-2">
 							<label class="flex flex-col gap-1">
@@ -534,7 +540,7 @@
 
 						{#if isMultiDay()}
 							<label class="mt-3 flex flex-col gap-1">
-								<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">Fullness <InfoPopover label="Day fullness" content="Higher fullness tells the planner to fit more into this day before shifting stops to the next one." /></span>
+								<FieldLabel text="Fullness" infoLabel="Day fullness" infoContent="Higher fullness tells the planner to fit more into this day before shifting stops to the next one." />
 								<select class="field" value={tripDay.fullness} onchange={(event) => updatePlanningDay(index, { fullness: (event.currentTarget as HTMLSelectElement).value as TripDayFullness })}>
 									{#each fullnessOptions as option}
 										<option value={option.value}>{option.label} - {option.description}</option>
@@ -563,13 +569,13 @@
 			<label class="flex flex-col gap-1 md:col-span-2"><span class="text-sm font-medium text-slate-700">Place name</span><input bind:value={placeName} class="field" type="text" placeholder="British Museum" /></label>
 			<label class="flex flex-col gap-1"><span class="text-sm font-medium text-slate-700">Latitude</span><input bind:value={placeLat} class="field" inputmode="decimal" type="text" /></label>
 			<label class="flex flex-col gap-1"><span class="text-sm font-medium text-slate-700">Longitude</span><input bind:value={placeLng} class="field" inputmode="decimal" type="text" /></label>
-			<label class="flex flex-col gap-1"><span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">Minimum dwell time (minutes) <InfoPopover label="Minimum dwell time" content="The least time you want to spend at this place. The planner keeps at least this many minutes in the itinerary." /></span><input bind:value={minimumDwellMinutes} class="field" inputmode="numeric" min="10" step="5" type="number" /></label>
-			<label class="flex flex-col gap-1"><span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">Priority (1-10) <InfoPopover label="Priority" content="Higher priority places are favoured when route timing is tight. Use 10 for must-see places." /></span><input bind:value={priority} class="field" inputmode="numeric" min="1" max="10" type="number" /></label>
-			<label class="flex flex-col gap-1"><span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">Opening time (optional) <InfoPopover label="Opening time" content="The planner will not schedule this place before it opens." /></span><input bind:value={openingTime} class="field" type="time" /></label>
-			<label class="flex flex-col gap-1"><span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">Closing time (optional) <InfoPopover label="Closing time" content="The planner aims to finish the visit before this time." /></span><input bind:value={closingTime} class="field" type="time" /></label>
-			<label class="flex flex-col gap-1 md:col-span-2"><span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">Fixed arrival (optional, hard constraint) <InfoPopover label="Fixed arrival" content="Must arrive at exactly this time, such as booked tickets. This is treated as a strict constraint." /></span><input bind:value={fixedArrival} class="field" type="time" /></label>
+			<label class="flex flex-col gap-1"><FieldLabel text={VISIT_TIME_FIELD_LABEL} infoLabel={VISIT_TIME_FIELD_LABEL} infoContent={VISIT_TIME_PLACE_INFO} /><input bind:value={minimumDwellMinutes} class="field" inputmode="numeric" min="10" step="5" type="number" /></label>
+			<label class="flex flex-col gap-1"><FieldLabel text="Priority (1-10)" infoLabel="Priority" infoContent="Higher priority places are favoured when route timing is tight. Use 10 for must-see places." /><input bind:value={priority} class="field" inputmode="numeric" min="1" max="10" type="number" /></label>
+			<label class="flex flex-col gap-1"><FieldLabel text="Opening time (optional)" infoLabel="Opening time" infoContent="The planner will not schedule this place before it opens." /><input bind:value={openingTime} class="field" type="time" /></label>
+			<label class="flex flex-col gap-1"><FieldLabel text="Closing time (optional)" infoLabel="Closing time" infoContent="The planner aims to finish the visit before this time." /><input bind:value={closingTime} class="field" type="time" /></label>
+			<label class="flex flex-col gap-1 md:col-span-2"><FieldLabel text="Fixed arrival (optional, hard constraint)" infoLabel="Fixed arrival" infoContent="Must arrive at exactly this time, such as booked tickets. This is treated as a strict constraint." /><input bind:value={fixedArrival} class="field" type="time" /></label>
 			{#if isMultiDay()}
-				<label class="flex flex-col gap-1 md:col-span-2"><span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">Preferred trip day <InfoPopover label="Preferred trip day" content="Optional. Keep the stop flexible or ask the planner to try a specific day first." /></span><select bind:value={preferredDayId} class="field"><option value="">Flexible across days</option>{#each planningDays as day}<option value={day.id}>{day.label}{#if day.date} - {day.date}{/if}</option>{/each}</select></label>
+				<label class="flex flex-col gap-1 md:col-span-2"><FieldLabel text="Preferred trip day" infoLabel="Preferred trip day" infoContent="Optional. Keep the stop flexible or ask the planner to try a specific day first." /><select bind:value={preferredDayId} class="field"><option value="">Flexible across days</option>{#each planningDays as day}<option value={day.id}>{day.label}{#if day.date} - {day.date}{/if}</option>{/each}</select></label>
 			{/if}
 		</div>
 		<button class="mt-4 inline-flex cursor-pointer rounded-lg bg-emerald-700 px-4 py-2 font-medium text-white hover:bg-emerald-600" type="button" onclick={addPlace} disabled={!(placeName.trim() || placeSearchQuery.trim())}>Add place</button>
@@ -581,6 +587,8 @@
 
 <style>
 	.field {
+		width: 100%;
+		min-width: 0;
 		border: 1px solid #cbd5e1;
 		border-radius: 0.5rem;
 		padding: 0.6rem 0.75rem;

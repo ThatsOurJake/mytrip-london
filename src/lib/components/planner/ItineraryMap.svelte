@@ -234,7 +234,7 @@
 	</div>
 
 	<p class="sr-only">{announcedSummary}</p>
-	<div bind:this={mapElement} class="mt-4 h-80 w-full overflow-hidden rounded-xl border border-slate-200" aria-hidden="true"></div>
+	<div bind:this={mapElement} class="mt-4 h-72 w-full overflow-hidden rounded-xl border border-slate-200 sm:h-80 lg:h-96" aria-hidden="true"></div>
 </section>
 
 <style>

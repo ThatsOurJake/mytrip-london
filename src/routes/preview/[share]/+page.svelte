@@ -69,7 +69,7 @@
 	</header>
 
 	{#if data.payload}
-		<section class="mt-6 grid gap-6 lg:grid-cols-[2fr_1fr]">
+		<section class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(18rem,1fr)]">
 			<div class="min-w-0 space-y-6">
 				<ItineraryTimeline input={data.payload.input} result={data.payload.result} shareEnabled={false} previewMode={true} />
 			</div>

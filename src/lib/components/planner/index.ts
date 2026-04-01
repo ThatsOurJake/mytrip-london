@@ -1,5 +1,6 @@
 export { default as AppIcon } from './AppIcon.svelte';
 export { default as ConflictPanel } from './ConflictPanel.svelte';
+export { default as FieldLabel } from './FieldLabel.svelte';
 export { default as InfoPopover } from './InfoPopover.svelte';
 export { default as ItineraryMap } from './ItineraryMap.svelte';
 export { default as ItineraryTimeline } from './ItineraryTimeline.svelte';

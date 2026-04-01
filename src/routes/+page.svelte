@@ -201,7 +201,7 @@
 		</div>
 	</section>
 
-	<section id="itinerary-section" class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(18rem,1fr)]">
+	<section id="itinerary-section" class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,3fr)_minmax(18rem,1fr)]">
 		<div class="min-w-0 space-y-6">
 			<ItineraryTimeline input={$planner.input} result={$planner.result} onExportPdf={() => planner.exportPdf()} />
 		</div>

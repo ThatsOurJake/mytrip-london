@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { getDayPalette } from '$lib/services/planner/day-colors';
+	import { VISIT_TIME_FIELD_LABEL, VISIT_TIME_STOP_INFO, visitTimeSummary } from '$lib/services/planner/ui-text';
+	import FieldLabel from './FieldLabel.svelte';
 	import InfoPopover from './InfoPopover.svelte';
 	import type { Place, TripPlanningDay } from '$lib/types/planner';
 
@@ -106,7 +108,7 @@
 	{#if places.length === 0}
 		<p class="mt-3 text-sm text-slate-600">No places added yet.</p>
 	{:else}
-		<div class="mt-4 grid gap-4 lg:grid-cols-2">
+		<div class="mt-4 grid gap-4 xl:grid-cols-2">
 			{#each places as place, index (place.id)}
 				<article class="rounded-xl border border-slate-200 bg-slate-50/60" style={preferredDayCardStyle(place)} aria-labelledby={`stop-${place.id}-title`}>
 					<div class="px-4 py-3">
@@ -118,7 +120,15 @@
 							>
 								{place.name || `Stop ${index + 1}`}
 							</h3>
-							<p class="text-xs text-slate-600" style={preferredDaySummaryStyle(place)}>Dwell {place.constraint.minimumDwellMinutes} min • Priority {place.constraint.priority}{#if planningDays.length > 1} • {preferredDaySummary(place)}{/if}</p>
+							<p class="flex flex-wrap items-center text-xs text-slate-600" style={preferredDaySummaryStyle(place)}>
+								<span>{visitTimeSummary(place.constraint.minimumDwellMinutes)}</span>
+								<span class="mx-1.5 text-current/60" aria-hidden="true">•</span>
+								<span>Priority {place.constraint.priority}</span>
+								{#if planningDays.length > 1}
+									<span class="mx-1.5 text-current/60" aria-hidden="true">•</span>
+									<span>{preferredDaySummary(place)}</span>
+								{/if}
+							</p>
 						</div>
 					</div>
 
@@ -130,51 +140,33 @@
 						</label>
 
 						<label class="flex flex-col gap-1">
-							<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
-								Minimum dwell time (minutes)
-								<InfoPopover label="Minimum dwell time" content="The least time you want to spend at this stop." />
-							</span>
+							<FieldLabel text={VISIT_TIME_FIELD_LABEL} infoLabel={VISIT_TIME_FIELD_LABEL} infoContent={VISIT_TIME_STOP_INFO} />
 							<input class="field" type="number" min="5" step="5" value={place.constraint.minimumDwellMinutes} onchange={(event) => updateNumber(place, 'minimumDwellMinutes', readInputValue(event))} />
 						</label>
 
 						<label class="flex flex-col gap-1">
-							<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
-								Priority (1-10)
-								<InfoPopover label="Priority" content="Higher priority stops are favoured when timings become tight." />
-							</span>
+							<FieldLabel text="Priority (1-10)" infoLabel="Priority" infoContent="Higher priority stops are favoured when timings become tight." />
 							<input class="field" type="number" min="1" max="10" value={place.constraint.priority} onchange={(event) => updateNumber(place, 'priority', readInputValue(event))} />
 						</label>
 
 						<label class="flex flex-col gap-1">
-							<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
-								Opening time
-								<InfoPopover label="Opening time" content="The planner will not schedule this stop before it opens." />
-							</span>
+							<FieldLabel text="Opening time" infoLabel="Opening time" infoContent="The planner will not schedule this stop before it opens." />
 							<input class="field" type="time" value={place.constraint.openingTime ?? ''} onchange={(event) => updateText(place, 'openingTime', readInputValue(event))} />
 						</label>
 
 						<label class="flex flex-col gap-1">
-							<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
-								Closing time
-								<InfoPopover label="Closing time" content="The planner aims to finish the visit before this time." />
-							</span>
+							<FieldLabel text="Closing time" infoLabel="Closing time" infoContent="The planner aims to finish the visit before this time." />
 							<input class="field" type="time" value={place.constraint.closingTime ?? ''} onchange={(event) => updateText(place, 'closingTime', readInputValue(event))} />
 						</label>
 
 						<label class="flex flex-col gap-1 md:col-span-2">
-							<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
-								Fixed arrival time
-								<InfoPopover label="Fixed arrival" content="A strict arrival time, such as ticket entry or a booking." />
-							</span>
+							<FieldLabel text="Fixed arrival time" infoLabel="Fixed arrival" infoContent="A strict arrival time, such as ticket entry or a booking." />
 							<input class="field" type="time" value={place.constraint.fixedArrival ?? ''} onchange={(event) => updateText(place, 'fixedArrival', readInputValue(event))} />
 						</label>
 
 						{#if planningDays.length > 1}
 							<label class="flex flex-col gap-1 md:col-span-2">
-								<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
-									Preferred trip day
-									<InfoPopover label="Preferred trip day" content="Optional. Keep this stop flexible, or ask the planner to try a specific trip day first." />
-								</span>
+								<FieldLabel text="Preferred trip day" infoLabel="Preferred trip day" infoContent="Optional. Keep this stop flexible, or ask the planner to try a specific trip day first." />
 								<select class="field" value={place.constraint.preferredDayId ?? ''} onchange={(event) => updatePreferredDay(place, readInputValue(event))}>
 									<option value="">Flexible across days</option>
 									{#each planningDays as day}
