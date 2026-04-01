@@ -4,6 +4,14 @@ export const ROUTE_DATA_SOURCES = ['auto', 'tfl', 'openstreet', 'heuristic'] as 
 
 export type RouteDataSource = (typeof ROUTE_DATA_SOURCES)[number];
 
+export const TRIP_DAY_FULLNESS = ['light', 'balanced', 'full', 'packed'] as const;
+
+export type TripDayFullness = (typeof TRIP_DAY_FULLNESS)[number];
+
+export const TRIP_DAY_PALETTES = ['blush', 'peach', 'butter', 'mint', 'sky', 'lavender', 'mist'] as const;
+
+export type TripDayPalette = (typeof TRIP_DAY_PALETTES)[number];
+
 export const TRANSIT_PREFERENCES = ['tube', 'bus', 'train', 'elizabeth'] as const;
 
 export type TransitPreference = (typeof TRANSIT_PREFERENCES)[number];
@@ -24,9 +32,10 @@ export interface Hotel {
 
 export interface PlaceConstraint {
   minimumDwellMinutes: number;
-  earliestArrival?: string;
-  latestArrival?: string;
+  openingTime?: string;
+  closingTime?: string;
   fixedArrival?: string;
+  preferredDayId?: string;
   priority: number;
 }
 
@@ -43,6 +52,19 @@ export interface PlannerSettings {
   mode: TransportMode;
   preferences?: TransportPreference[];
   dataSource?: RouteDataSource;
+  startDate?: string;
+  endDate?: string;
+  planningDays?: TripPlanningDay[];
+}
+
+export interface TripPlanningDay {
+  id: string;
+  label: string;
+  date?: string;
+  dayStart: string;
+  dayEnd: string;
+  fullness: TripDayFullness;
+  palette: TripDayPalette;
 }
 
 export interface PlannerInput {
@@ -93,6 +115,9 @@ export interface ScheduledVisit {
   placeId: string;
   placeName: string;
   visitType: 'place' | 'return';
+  dayIndex: number;
+  dayLabel: string;
+  dayDate?: string;
   arrivalTime: string;
   departureTime: string;
   dwellMinutes: number;
@@ -113,7 +138,7 @@ export interface PlannerConflict {
 export interface PlannerWarning {
   placeId: string;
   placeName: string;
-  type: 'tight-window';
+  type: 'tight-window' | 'preferred-day' | 'overnight-shift' | 'day-end' | 'unscheduled' | 'shortened-dwell';
   message: string;
 }
 
@@ -121,6 +146,8 @@ export interface PlannerResult {
   orderedPlaces: Place[];
   modeUsed: TransportMode;
   preferencesUsed: TransportPreference[];
+  planningDays: TripPlanningDay[];
+  daysUsed: number;
   itinerary: ScheduledVisit[];
   conflicts: PlannerConflict[];
   warnings: PlannerWarning[];

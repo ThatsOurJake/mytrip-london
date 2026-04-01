@@ -6,6 +6,7 @@ interface CandidateScore {
   place: Place;
   score: number;
   arrivalMinutes: number;
+  serviceStartMinutes: number;
 }
 
 function lookupPreferences(input: PlannerInput) {
@@ -49,19 +50,23 @@ async function scoreCandidate(
   });
 
   const arrival = currentMinutes + segment.totalMinutes;
+  const dwellMinutes = candidate.constraint.minimumDwellMinutes;
   const fixedArrival = candidate.constraint.fixedArrival
     ? parseTimeToMinutes(candidate.constraint.fixedArrival)
     : undefined;
-  const windowStart = fixedArrival ?? safeWindowStart(candidate.constraint.earliestArrival, dayStartMinutes);
-  const windowEnd = fixedArrival ?? safeWindowEnd(candidate.constraint.latestArrival, dayEndMinutes);
+  const windowStart = fixedArrival ?? safeWindowStart(candidate.constraint.openingTime, dayStartMinutes);
+  const availabilityEnd = fixedArrival ?? safeWindowEnd(candidate.constraint.closingTime, dayEndMinutes);
+  const serviceStartMinutes = Math.max(arrival, windowStart);
+  const projectedDepartureMinutes = serviceStartMinutes + dwellMinutes;
   const waitingPenalty = Math.max(0, windowStart - arrival) * 0.25;
-  const latenessPenalty = Math.max(0, arrival - windowEnd) * 10;
+  const latenessPenalty = Math.max(0, projectedDepartureMinutes - availabilityEnd) * 10;
   const score = segment.totalMinutes + waitingPenalty + latenessPenalty - priorityBoost(candidate.constraint.priority);
 
   return {
     place: candidate,
     score,
-    arrivalMinutes: arrival
+    arrivalMinutes: arrival,
+    serviceStartMinutes
   };
 }
 
@@ -106,7 +111,7 @@ export async function optimizePlaceOrder(input: PlannerInput, routingEngine: Rou
     const fixedArrival = next.place.constraint.fixedArrival
       ? parseTimeToMinutes(next.place.constraint.fixedArrival)
       : undefined;
-    const serviceStart = fixedArrival ? Math.max(next.arrivalMinutes, fixedArrival) : next.arrivalMinutes;
+    const serviceStart = fixedArrival ? Math.max(next.arrivalMinutes, fixedArrival) : next.serviceStartMinutes;
 
     currentMinutes = serviceStart + next.place.constraint.minimumDwellMinutes;
     currentNode = {

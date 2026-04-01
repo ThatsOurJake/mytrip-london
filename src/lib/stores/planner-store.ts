@@ -1,5 +1,8 @@
 import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
+import { normalizePlannerSettings, todayIsoDate } from '$lib/services/planner/day-settings';
+import { paletteForDayIndex } from '../services/planner/day-colors';
+import { normalizePlannerInputPlaces } from '../services/planner/place-constraints';
 import { createId } from '$lib/services/utils';
 import { clearPlannerRouteCache, runPlanner } from '$lib/services/planner/run-planner';
 import { exportItineraryPdf } from '$lib/services/export/pdf';
@@ -92,7 +95,20 @@ const defaultState: PlannerStoreState = {
       dayEnd: '21:00',
       mode: 'walking',
       preferences: ['walking'],
-      dataSource: 'auto'
+      dataSource: 'auto',
+      startDate: todayIsoDate(),
+      endDate: todayIsoDate(),
+      planningDays: [
+        {
+          id: 'day-1',
+          label: 'Day 1',
+          date: todayIsoDate(),
+          dayStart: '08:30',
+          dayEnd: '21:00',
+          fullness: 'full',
+          palette: paletteForDayIndex(0)
+        }
+      ]
     },
     places: []
   },
@@ -117,14 +133,14 @@ function readPersistedState(): PlannerInput | null {
       return null;
     }
 
-    return {
+    return normalizePlannerInputPlaces({
       ...parsed.input,
-      settings: {
+      settings: normalizePlannerSettings({
         ...parsed.input.settings,
         preferences: normalizePreferences(parsed.input.settings.preferences, parsed.input.settings.mode),
         dataSource: parsed.input.settings.dataSource ?? 'auto'
-      }
-    };
+      })
+    });
   } catch {
     return null;
   }
@@ -197,22 +213,28 @@ function createPlannerStore() {
         }
       }));
     },
-    setSettings(
-      dayStart: string,
-      dayEnd: string,
-      mode: TransportMode,
-      preferences?: TransportPreference[],
-      dataSource: RouteDataSource = 'auto'
-    ): void {
+    setSettings(settings: {
+      dayStart: string;
+      dayEnd: string;
+      mode: TransportMode;
+      preferences?: TransportPreference[];
+      dataSource?: RouteDataSource;
+      startDate?: string;
+      endDate?: string;
+      planningDays?: PlannerInput['settings']['planningDays'];
+    }): void {
       updateInput((input) => ({
         ...input,
-        settings: {
-          dayStart,
-          dayEnd,
-          mode,
-          preferences: normalizePreferences(preferences, mode),
-          dataSource
-        }
+        settings: normalizePlannerSettings({
+          dayStart: settings.dayStart,
+          dayEnd: settings.dayEnd,
+          mode: settings.mode,
+          preferences: normalizePreferences(settings.preferences, settings.mode),
+          dataSource: settings.dataSource ?? 'auto',
+          startDate: settings.startDate,
+          endDate: settings.endDate,
+          planningDays: settings.planningDays
+        })
       }));
     },
     addPlace(placeDraft: Omit<Place, 'id'>): void {
@@ -287,14 +309,14 @@ function createPlannerStore() {
       });
     },
     importSharedPlan(input: PlannerInput, result: PlannerResult): void {
-      const normalizedInput: PlannerInput = {
+      const normalizedInput: PlannerInput = normalizePlannerInputPlaces({
         ...input,
-        settings: {
+        settings: normalizePlannerSettings({
           ...input.settings,
           preferences: normalizePreferences(input.settings.preferences, input.settings.mode),
           dataSource: input.settings.dataSource ?? 'auto'
-        }
-      };
+        })
+      });
 
       persistState(normalizedInput);
       clearPlannerRouteCache();

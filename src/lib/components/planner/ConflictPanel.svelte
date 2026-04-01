@@ -2,6 +2,14 @@
 	import type { PlannerResult } from '$lib/types/planner';
 
 	let { result }: { result: PlannerResult | null } = $props();
+
+	function informationalWarnings(result: PlannerResult) {
+		return result.warnings.filter((warning) => warning.type === 'unscheduled');
+	}
+
+	function standardWarnings(result: PlannerResult) {
+		return result.warnings.filter((warning) => warning.type !== 'unscheduled');
+	}
 </script>
 
 <section aria-labelledby="conflicts-title" class="rounded-2xl border border-slate-300 bg-white/90 p-5 shadow-sm">
@@ -20,19 +28,31 @@
 			</ul>
 		{/if}
 
-		{#if result.warnings.length > 0}
+		{#if informationalWarnings(result).length > 0}
+			<h3 class="mt-4 text-sm font-semibold text-sky-900">Info</h3>
+			<ul class="mt-2 space-y-2">
+				{#each informationalWarnings(result) as warning}
+					<li class="rounded-lg border border-sky-200 bg-sky-50 p-3 text-sm text-sky-900">{warning.message}</li>
+				{/each}
+			</ul>
+		{/if}
+
+		{#if standardWarnings(result).length > 0}
 			<h3 class="mt-4 text-sm font-semibold text-amber-900">Warnings</h3>
 			<ul class="mt-2 space-y-2">
-				{#each result.warnings as warning}
+				{#each standardWarnings(result) as warning}
 					<li class="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">{warning.message}</li>
 				{/each}
 			</ul>
 			<div class="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-700">
 				<p class="font-semibold text-slate-900">Warning guide</p>
-				<p>
-					Tight timing means the stop has very little room for delays before the latest allowed arrival. "No arrival
-					buffer" means you must arrive exactly on time to avoid a conflict.
-				</p>
+				<ul class="mt-2 space-y-2 list-none pl-0">
+					<li>Tight timing means the stop has very little room before closing or before a booked arrival time.</li>
+					<li>Preferred-day warnings mean the planner had to place a stop on a different day.</li>
+					<li>Overnight warnings mean a fixed-time visit was moved to a later day to avoid missing it.</li>
+					<li>Day-end warnings mean the visit runs past the target finish time without breaking an explicit time rule.</li>
+					<li>Shortened-dwell warnings mean a booked visit starts on time but the place closes before the full stay can be completed.</li>
+				</ul>
 			</div>
 		{/if}
 	{/if}

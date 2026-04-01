@@ -1,4 +1,11 @@
-import { TRANSIT_PREFERENCES, type SegmentLeg, type TransportMode, type TransportPreference } from '$lib/types/planner';
+import {
+  TRANSIT_PREFERENCES,
+  type PlannerResult,
+  type RouteSegment,
+  type SegmentLeg,
+  type TransportMode,
+  type TransportPreference
+} from '$lib/types/planner';
 
 export interface TextRun {
   text: string;
@@ -93,4 +100,33 @@ export function renderLegTextRunsHtml(leg: SegmentLeg): string {
   return describeLegTextRuns(leg)
     .map((run) => (run.highlight ? `<strong>${escapeHtml(run.text)}</strong>` : escapeHtml(run.text)))
     .join('');
+}
+
+export function predictedTflCostGbp(result: PlannerResult): number | null {
+  const tflSegments = result.itinerary
+    .map((visit) => visit.travelFromPrevious)
+    .filter(
+      (segment): segment is RouteSegment => segment !== undefined && segment !== null && segment.source === 'tfl'
+    );
+
+  if (tflSegments.length === 0) {
+    return 0;
+  }
+
+  let totalFare = 0;
+
+  for (const segment of tflSegments) {
+    if (segment.fareGbp === null || segment.fareGbp === undefined || !Number.isFinite(segment.fareGbp)) {
+      return null;
+    }
+
+    totalFare += segment.fareGbp;
+  }
+
+  return Number(totalFare.toFixed(2));
+}
+
+export function predictedTflCostLabel(result: PlannerResult): string {
+  const totalFare = predictedTflCostGbp(result);
+  return totalFare === null ? '???' : `£${totalFare.toFixed(2)}`;
 }

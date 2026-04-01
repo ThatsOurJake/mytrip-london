@@ -1,18 +1,21 @@
 <script lang="ts">
+	import { getDayPalette } from '$lib/services/planner/day-colors';
 	import InfoPopover from './InfoPopover.svelte';
-	import type { Place } from '$lib/types/planner';
+	import type { Place, TripPlanningDay } from '$lib/types/planner';
 
 	let {
 		places,
+		planningDays,
 		onUpdate,
 		onRemove
 	}: {
 		places: Place[];
+		planningDays: TripPlanningDay[];
 		onUpdate: (place: Place) => void;
 		onRemove: (id: string) => void;
 	} = $props();
 
-	function updateText(place: Place, key: 'name' | 'earliestArrival' | 'latestArrival' | 'fixedArrival', value: string): void {
+	function updateText(place: Place, key: 'name' | 'openingTime' | 'closingTime' | 'fixedArrival', value: string): void {
 		if (key === 'name') {
 			onUpdate({ ...place, name: value });
 			return;
@@ -37,8 +40,47 @@
 		});
 	}
 
+	function updatePreferredDay(place: Place, preferredDayId: string): void {
+		onUpdate({
+			...place,
+			constraint: {
+				...place.constraint,
+				preferredDayId: preferredDayId || undefined
+			}
+		});
+	}
+
 	function readInputValue(event: Event): string {
-		return (event.currentTarget as HTMLInputElement).value;
+		return (event.currentTarget as HTMLInputElement | HTMLSelectElement).value;
+	}
+
+	function preferredDaySummary(place: Place): string {
+		if (planningDays.length <= 1) {
+			return 'Single trip day';
+		}
+
+		const preferredDay = planningDays.find((day) => day.id === place.constraint.preferredDayId);
+		return preferredDay ? `Prefers ${preferredDay.label}` : 'Flexible day';
+	}
+
+	function preferredDayCardStyle(place: Place): string {
+		const preferredDay = planningDays.find((day) => day.id === place.constraint.preferredDayId);
+		if (!preferredDay) {
+			return '';
+		}
+
+		const palette = getDayPalette(preferredDay.palette);
+		return `background:${palette.surface};border-color:${palette.border};`;
+	}
+
+	function preferredDaySummaryStyle(place: Place): string {
+		const preferredDay = planningDays.find((day) => day.id === place.constraint.preferredDayId);
+		if (!preferredDay) {
+			return '';
+		}
+
+		const palette = getDayPalette(preferredDay.palette);
+		return `color:${palette.text};`;
 	}
 
 	let pendingRemovalId = $state<string | null>(null);
@@ -66,7 +108,7 @@
 	{:else}
 		<div class="mt-4 grid gap-4 lg:grid-cols-2">
 			{#each places as place, index (place.id)}
-				<article class="rounded-xl border border-slate-200 bg-slate-50/60" aria-labelledby={`stop-${place.id}-title`}>
+				<article class="rounded-xl border border-slate-200 bg-slate-50/60" style={preferredDayCardStyle(place)} aria-labelledby={`stop-${place.id}-title`}>
 					<div class="px-4 py-3">
 						<div class="min-w-0">
 							<h3
@@ -76,12 +118,12 @@
 							>
 								{place.name || `Stop ${index + 1}`}
 							</h3>
-							<p class="text-xs text-slate-600">Stop {index + 1} • Dwell {place.constraint.minimumDwellMinutes} min • Priority {place.constraint.priority}</p>
+							<p class="text-xs text-slate-600" style={preferredDaySummaryStyle(place)}>Dwell {place.constraint.minimumDwellMinutes} min • Priority {place.constraint.priority}{#if planningDays.length > 1} • {preferredDaySummary(place)}{/if}</p>
 						</div>
 					</div>
 
 					<div class="border-t border-slate-200 px-4 py-4">
-						<div class="mt-3 grid gap-3 md:grid-cols-2">
+						<div class="grid gap-3 md:grid-cols-2">
 						<label class="flex flex-col gap-1 md:col-span-2">
 							<span class="text-sm font-medium text-slate-700">Place name</span>
 							<input class="field" type="text" value={place.name} onchange={(event) => updateText(place, 'name', readInputValue(event))} />
@@ -105,18 +147,18 @@
 
 						<label class="flex flex-col gap-1">
 							<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
-								Earliest arrival
-								<InfoPopover label="Earliest arrival" content="Do not arrive before this time." />
+								Opening time
+								<InfoPopover label="Opening time" content="The planner will not schedule this stop before it opens." />
 							</span>
-							<input class="field" type="time" value={place.constraint.earliestArrival ?? ''} onchange={(event) => updateText(place, 'earliestArrival', readInputValue(event))} />
+							<input class="field" type="time" value={place.constraint.openingTime ?? ''} onchange={(event) => updateText(place, 'openingTime', readInputValue(event))} />
 						</label>
 
 						<label class="flex flex-col gap-1">
 							<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
-								Latest arrival
-								<InfoPopover label="Latest arrival" content="You should arrive by this time at the latest." />
+								Closing time
+								<InfoPopover label="Closing time" content="The planner aims to finish the visit before this time." />
 							</span>
-							<input class="field" type="time" value={place.constraint.latestArrival ?? ''} onchange={(event) => updateText(place, 'latestArrival', readInputValue(event))} />
+							<input class="field" type="time" value={place.constraint.closingTime ?? ''} onchange={(event) => updateText(place, 'closingTime', readInputValue(event))} />
 						</label>
 
 						<label class="flex flex-col gap-1 md:col-span-2">
@@ -126,6 +168,22 @@
 							</span>
 							<input class="field" type="time" value={place.constraint.fixedArrival ?? ''} onchange={(event) => updateText(place, 'fixedArrival', readInputValue(event))} />
 						</label>
+
+						{#if planningDays.length > 1}
+							<label class="flex flex-col gap-1 md:col-span-2">
+								<span class="inline-flex items-center gap-2 text-sm font-medium text-slate-700">
+									Preferred trip day
+									<InfoPopover label="Preferred trip day" content="Optional. Keep this stop flexible, or ask the planner to try a specific trip day first." />
+								</span>
+								<select class="field" value={place.constraint.preferredDayId ?? ''} onchange={(event) => updatePreferredDay(place, readInputValue(event))}>
+									<option value="">Flexible across days</option>
+									{#each planningDays as day}
+										<option value={day.id}>{day.label}{#if day.date} • {day.date}{/if}</option>
+									{/each}
+								</select>
+								<span class="text-xs text-slate-500">The planner will try to keep this stop on the selected day before using later days.</span>
+							</label>
+						{/if}
 							</div>
 
 						<div class="mt-4 border-t border-slate-200 pt-3">

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { mdiMapMarkerPath } from '@mdi/js';
+	import { mdiLoading, mdiMapMarkerPath } from '@mdi/js';
 	import openStreetMapLogo from '$lib/assets/openstreetmap.svg';
 	import tflLogo from '$lib/assets/transportforlondon.svg';
 	import AppIcon from '$lib/components/planner/AppIcon.svelte';
@@ -18,9 +18,21 @@
 		mode: TransportMode;
 		preferences: TransportPreference[];
 		dataSource: RouteDataSource;
+		startDate?: string;
+		endDate?: string;
+		planningDays: NonNullable<import('$lib/types/planner').PlannerSettings['planningDays']>;
 	}): void {
 		planner.setHotel(value.hotelName, value.hotelLat, value.hotelLng);
-		planner.setSettings(value.dayStart, value.dayEnd, value.mode, value.preferences, value.dataSource);
+		planner.setSettings({
+			dayStart: value.dayStart,
+			dayEnd: value.dayEnd,
+			mode: value.mode,
+			preferences: value.preferences,
+			dataSource: value.dataSource,
+			startDate: value.startDate,
+			endDate: value.endDate,
+			planningDays: value.planningDays
+		});
 	}
 
 	function handleAddPlace(value: {
@@ -28,9 +40,10 @@
 		lat: number;
 		lng: number;
 		minimumDwellMinutes: number;
-		earliestArrival: string;
-		latestArrival: string;
+		openingTime?: string;
+		closingTime?: string;
 		fixedArrival: string;
+		preferredDayId?: string;
 		priority: number;
 	}): void {
 		planner.addPlace({
@@ -41,9 +54,10 @@
 			},
 			constraint: {
 				minimumDwellMinutes: value.minimumDwellMinutes,
-				earliestArrival: value.earliestArrival || undefined,
-				latestArrival: value.latestArrival || undefined,
+				openingTime: value.openingTime || undefined,
+				closingTime: value.closingTime || undefined,
 				fixedArrival: value.fixedArrival || undefined,
+				preferredDayId: value.preferredDayId || undefined,
 				priority: value.priority
 			}
 		});
@@ -59,6 +73,27 @@
 
 	async function optimize(): Promise<void> {
 		await planner.optimize();
+	}
+
+	function optimizationStatusMessage(dataSource: RouteDataSource): { title: string; detail: string } {
+		if (dataSource === 'tfl') {
+			return {
+				title: 'Fetching live TfL journeys',
+				detail: 'Live public transport lookups can take a little longer while routes and fares are gathered for each leg.'
+			};
+		}
+
+		if (dataSource === 'openstreet') {
+			return {
+				title: 'Calculating live street routes',
+				detail: 'The planner is checking walking or cycling routes and rebuilding the itinerary around them.'
+			};
+		}
+
+		return {
+			title: 'Building your itinerary',
+			detail: 'The planner is comparing route options, timings, and stop constraints now.'
+		};
 	}
 </script>
 
@@ -113,20 +148,28 @@
 					dayEnd: $planner.input.settings.dayEnd,
 					mode: $planner.input.settings.mode,
 					preferences: $planner.input.settings.preferences ?? ['walking'],
-					dataSource: $planner.input.settings.dataSource ?? 'auto'
+					dataSource: $planner.input.settings.dataSource ?? 'auto',
+					startDate: $planner.input.settings.startDate,
+					endDate: $planner.input.settings.endDate,
+					planningDays: $planner.input.settings.planningDays ?? []
 				}}
 				stopCount={$planner.input.places.length}
 				onSaveSettings={handleSaveSettings}
 				onAddPlace={handleAddPlace}
 			/>
-			<StopsTable places={$planner.input.places} onUpdate={handleUpdatePlace} onRemove={handleRemovePlace} />
+			<StopsTable
+				places={$planner.input.places}
+				planningDays={$planner.input.settings.planningDays ?? []}
+				onUpdate={handleUpdatePlace}
+				onRemove={handleRemovePlace}
+			/>
 
 			<a href="#itinerary-section" class="sr-only" aria-label="Skip to itinerary and optimisation section">
 				Skip to itinerary and optimisation
 			</a>
 
 			<div class="rounded-xl border border-slate-200 bg-white p-3 shadow-sm" aria-label="Quick actions">
-				<p class="text-sm text-slate-700">Finished adding stops? Next step is to optimise.</p>
+				<p class="text-sm text-slate-700">Finished adding stops? Next step is to generate that itinerary.</p>
 				<div class="mt-2 flex gap-2">
 					<button
 						type="button"
@@ -134,24 +177,33 @@
 						onclick={optimize}
 						disabled={$planner.isRunning || $planner.input.places.length === 0}
 					>
-						{$planner.isRunning ? 'Optimising...' : 'Optimise now'}
-					</button>
-					<button
-						type="button"
-						class="cursor-pointer rounded-lg bg-indigo-900 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-800 disabled:cursor-not-allowed disabled:bg-indigo-300"
-						onclick={() => planner.exportPdf()}
-						disabled={!$planner.result}
-					>
-						Export PDF
+						{$planner.isRunning ? 'Optimising...' : 'Generate Itinerary'}
 					</button>
 				</div>
+				{#if $planner.isRunning}
+					{@const status = optimizationStatusMessage($planner.input.settings.dataSource ?? 'auto')}
+					<div class="mt-3 rounded-xl border border-sky-200 bg-sky-50 p-3 text-sky-950" role="status" aria-live="polite">
+						<div class="flex items-start gap-3">
+							<div class="mt-0.5 rounded-full bg-white p-1.5 text-sky-700 ring-1 ring-sky-200">
+								<span class="loading-icon inline-flex"><AppIcon path={mdiLoading} size={16} decorative={true} /></span>
+							</div>
+							<div class="min-w-0">
+								<p class="text-sm font-semibold text-sky-950">{status.title}</p>
+								<p class="mt-1 text-sm text-sky-900">{status.detail}</p>
+								<div class="mt-3 h-2 overflow-hidden rounded-full bg-sky-100">
+									<div class="loading-bar h-full rounded-full bg-sky-500"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{/if}
 			</div>
 		</div>
 	</section>
 
 	<section id="itinerary-section" class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(18rem,1fr)]">
 		<div class="min-w-0 space-y-6">
-			<ItineraryTimeline input={$planner.input} result={$planner.result} />
+			<ItineraryTimeline input={$planner.input} result={$planner.result} onExportPdf={() => planner.exportPdf()} />
 		</div>
 		<div class="min-w-0 space-y-6">
 			<ConflictPanel result={$planner.result} />
@@ -200,3 +252,38 @@
 		</p>
 	</footer>
 </main>
+
+<style>
+	.loading-icon {
+		animation: spin 1s linear infinite;
+	}
+
+	.loading-bar {
+		width: 40%;
+		animation: loading-sweep 1.4s ease-in-out infinite;
+	}
+
+	@keyframes spin {
+		from {
+			transform: rotate(0deg);
+		}
+
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	@keyframes loading-sweep {
+		0% {
+			transform: translateX(-110%);
+		}
+
+		50% {
+			transform: translateX(120%);
+		}
+
+		100% {
+			transform: translateX(260%);
+		}
+	}
+</style>

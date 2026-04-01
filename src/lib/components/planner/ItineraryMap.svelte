@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import { getDayPalette } from '$lib/services/planner/day-colors';
 	import type { PlannerInput, PlannerResult, RouteSegment } from '$lib/types/planner';
 	import 'leaflet/dist/leaflet.css';
 
@@ -17,6 +18,7 @@
 
 	interface MapSegment {
 		label: string;
+		dayIndex: number;
 		source: string;
 		coordinates: Array<[number, number]>;
 	}
@@ -35,16 +37,21 @@
 	let announcedSummary = $state('');
 
 	function buildStops(input: PlannerInput, result: PlannerResult): MapStop[] {
-		const visitStops = result.orderedPlaces.map((place, index) => {
-			const visit = result.itinerary.find((entry) => entry.placeId === place.id);
-			return {
+		const scheduledVisits = result.itinerary.filter((entry) => entry.visitType === 'place');
+		const visitStops = scheduledVisits.flatMap((visit, index) => {
+			const place = result.orderedPlaces.find((entry) => entry.id === visit.placeId) ?? input.places.find((entry) => entry.id === visit.placeId);
+			if (!place) {
+				return [];
+			}
+
+			return [{
 				label: place.name,
 				lat: place.location.lat,
 				lng: place.location.lng,
 				variant: 'place' as const,
 				markerLabel: String(index + 1),
-				timeLabel: visit ? `${visit.arrivalTime} to ${visit.departureTime}` : undefined
-			};
+				timeLabel: `${visit.arrivalTime} to ${visit.departureTime}`
+			}];
 		});
 
 		return [
@@ -53,17 +60,21 @@
 				lat: input.hotel.location.lat,
 				lng: input.hotel.location.lng,
 				variant: 'hotel',
-				markerLabel: 'H',
-				timeLabel: input.settings.dayStart
+				markerLabel: 'H'
 			},
 			...visitStops
 		];
 	}
 
 	function routeCoordinates(input: PlannerInput, result: PlannerResult): Array<[number, number]> {
+		const scheduledPlaces = result.itinerary
+			.filter((visit) => visit.visitType === 'place')
+			.map((visit) => result.orderedPlaces.find((place) => place.id === visit.placeId) ?? input.places.find((place) => place.id === visit.placeId))
+			.filter((place): place is PlannerResult['orderedPlaces'][number] => Boolean(place));
+
 		return [
 			[input.hotel.location.lat, input.hotel.location.lng],
-			...result.orderedPlaces.map((place) => [place.location.lat, place.location.lng] as [number, number]),
+			...scheduledPlaces.map((place) => [place.location.lat, place.location.lng] as [number, number]),
 			[input.hotel.location.lat, input.hotel.location.lng]
 		];
 	}
@@ -82,6 +93,7 @@
 				const segment = visit.travelFromPrevious as RouteSegment;
 				return {
 					label: `${segment.fromName} to ${segment.toName}`,
+					dayIndex: visit.dayIndex,
 					source: segment.source,
 					coordinates:
 						segment.geometry && segment.geometry.length > 1
@@ -91,21 +103,29 @@
 			});
 	}
 
-	function segmentStyle(source: string): {
+	function segmentStyle(result: PlannerResult, dayIndex: number, source: string): {
 		color: string;
 		weight: number;
 		opacity: number;
 		dashArray?: string;
 	} {
+		const planningDay = result.planningDays[dayIndex] ?? result.planningDays[0];
+		const palette = getDayPalette(planningDay?.palette);
+		const baseStyle = {
+			color: palette.accent,
+			weight: 5,
+			opacity: 0.9
+		};
+
 		if (source === 'tfl') {
-			return { color: '#113b92', weight: 5, opacity: 0.85 };
+			return baseStyle;
 		}
 
 		if (source === 'openrouteservice') {
-			return { color: '#4d7c0f', weight: 5, opacity: 0.85 };
+			return baseStyle;
 		}
 
-		return { color: '#0f766e', weight: 4, opacity: 0.8, dashArray: '6 6' };
+		return { ...baseStyle, weight: 4, opacity: 0.82, dashArray: '6 6' };
 	}
 
 	function updateMap(): void {
@@ -138,7 +158,7 @@
 			}).addTo(mapInstance);
 		} else {
 			for (const segment of segments) {
-				L.polyline(segment.coordinates, segmentStyle(segment.source))
+				L.polyline(segment.coordinates, segmentStyle(result, segment.dayIndex, segment.source))
 					.addTo(mapInstance)
 					.bindPopup(`<strong>${segment.label}</strong><div>Source: ${segment.source}</div>`);
 			}

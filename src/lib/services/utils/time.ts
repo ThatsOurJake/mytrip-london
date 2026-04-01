@@ -39,16 +39,16 @@ export function clampMinutes(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-export function safeWindowStart(earliestArrival: string | undefined, dayStartMinutes: number): number {
-  if (!earliestArrival) {
+export function safeWindowStart(openingTime: string | undefined, dayStartMinutes: number): number {
+  if (!openingTime) {
     return dayStartMinutes;
   }
-  return Math.max(dayStartMinutes, parseTimeToMinutes(earliestArrival));
+  return Math.max(dayStartMinutes, parseTimeToMinutes(openingTime));
 }
 
-export function safeWindowEnd(latestArrival: string | undefined, dayEndMinutes: number): number {
-  if (!latestArrival) {
+export function safeWindowEnd(closingTime: string | undefined, dayEndMinutes: number): number {
+  if (!closingTime) {
     return dayEndMinutes;
   }
-  return Math.min(dayEndMinutes, parseTimeToMinutes(latestArrival));
+  return Math.min(dayEndMinutes, parseTimeToMinutes(closingTime));
 }

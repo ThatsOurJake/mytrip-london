@@ -74,6 +74,11 @@
     onSelect(location);
   }
 
+  function onSuggestionPointerDown(event: PointerEvent, location: LocationSuggestion): void {
+    event.preventDefault();
+    chooseSuggestion(location);
+  }
+
   function onKeydown(event: KeyboardEvent): void {
     if (suggestions.length === 0) {
       return;
@@ -149,7 +154,7 @@
             class="w-full cursor-pointer border-b border-slate-100 px-3 py-2 text-left text-sm text-slate-800 hover:bg-slate-50"
             class:bg-slate-100={highlightedIndex === index}
             onmouseenter={() => (highlightedIndex = index)}
-            onclick={() => chooseSuggestion(suggestion)}
+            onpointerdown={(event) => onSuggestionPointerDown(event, suggestion)}
           >
             {suggestion.label}
           </button>
