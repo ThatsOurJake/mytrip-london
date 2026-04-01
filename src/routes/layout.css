@@ -1,0 +1,49 @@
+@import 'tailwindcss';
+
+:root {
+	font-family: 'DM Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+	color: #0f172a;
+	background: #e7f8f2;
+}
+
+body {
+	min-height: 100vh;
+	margin: 0;
+	background:
+		radial-gradient(circle at 15% 20%, rgb(56 189 148 / 22%) 0, transparent 28%),
+		radial-gradient(circle at 85% 15%, rgb(15 118 110 / 28%) 0, transparent 33%),
+		linear-gradient(180deg, #f5fffc 0%, #ecf6ff 100%);
+}
+
+button,
+input,
+select {
+	font: inherit;
+}
+
+button:not(:disabled) {
+	cursor: pointer;
+}
+
+:focus-visible {
+	outline: 3px solid #0f766e;
+	outline-offset: 2px;
+}
+
+.skip-link {
+	position: absolute;
+	left: 0.75rem;
+	top: 0.5rem;
+	transform: translateY(-200%);
+	background: #0f172a;
+	color: #ffffff;
+	padding: 0.5rem 0.75rem;
+	border-radius: 0.5rem;
+	font-weight: 600;
+	z-index: 1000;
+	transition: transform 120ms ease-in-out;
+}
+
+.skip-link:focus-visible {
+	transform: translateY(0);
+}

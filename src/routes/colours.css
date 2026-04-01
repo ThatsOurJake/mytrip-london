@@ -1,0 +1,113 @@
+/* ==========================================
+   GENERIC FALLBACKS FOR MODES
+   ========================================== */
+
+/* Tube / London Underground */
+.bg-tube { background-color: #0019a8; }
+.text-tube { color: #0019a8; }
+
+/* Overground */
+.bg-overground { background-color: #fa7b05; }
+.text-overground { color: #fa7b05; }
+
+/* DLR */
+.bg-dlr { background-color: #00afad; }
+.text-dlr { color: #00afad; }
+
+/* Bus (Applies to all individual bus line numbers) */
+.bg-bus { background-color: #dc241f; }
+.text-bus { color: #dc241f; }
+
+/* Tram */
+.bg-tram { background-color: #5fb526; }
+.text-tram { color: #5fb526; }
+
+/* National Rail (Generic) */
+.bg-national-rail { background-color: #003366; }
+.text-national-rail { color: #003366; }
+
+
+/* ==========================================
+   SPECIFIC LONDON UNDERGROUND LINE IDS
+   ========================================== */
+
+/* Bakerloo line */
+.bg-bakerloo { background-color: #b26300; }
+.text-bakerloo { color: #b26300; }
+
+/* Central line */
+.bg-central { background-color: #dc241f; }
+.text-central { color: #dc241f; }
+
+/* Circle line */
+.bg-circle { background-color: #ffc80a; }
+.text-circle { color: #ffc80a; }
+
+/* District line */
+.bg-district { background-color: #007d32; }
+.text-district { color: #007d32; }
+
+/* Hammersmith & City line */
+.bg-hammersmith-city { background-color: #f589a6; }
+.text-hammersmith-city { color: #f589a6; }
+
+/* Jubilee line */
+.bg-jubilee { background-color: #838d93; }
+.text-jubilee { color: #838d93; }
+
+/* Metropolitan line */
+.bg-metropolitan { background-color: #9b0058; }
+.text-metropolitan { color: #9b0058; }
+
+/* Northern line */
+.bg-northern { background-color: #000000; }
+.text-northern { color: #000000; }
+
+/* Piccadilly line */
+.bg-piccadilly { background-color: #0019a8; }
+.text-piccadilly { color: #0019a8; }
+
+/* Victoria line */
+.bg-victoria { background-color: #039be5; }
+.text-victoria { color: #039be5; }
+
+/* Waterloo & City line */
+.bg-waterloo-city { background-color: #76d0bd; }
+.text-waterloo-city { color: #76d0bd; }
+
+
+/* ==========================================
+   ELIZABETH LINE ID
+   ========================================== */
+
+.bg-elizabeth { background-color: #60399e; }
+.text-elizabeth { color: #60399e; }
+
+
+/* ==========================================
+   SPECIFIC LONDON OVERGROUND LINE IDS
+   ========================================== */
+
+/* Liberty line */
+.bg-liberty { background-color: #5d6061; }
+.text-liberty { color: #5d6061; }
+
+/* Lioness line */
+.bg-lioness { background-color: #faa61a; }
+.text-lioness { color: #faa61a; }
+
+/* Mildmay line */
+.bg-mildmay { background-color: #0077ad; }
+.text-mildmay { color: #0077ad; }
+
+/* Suffragette line */
+.bg-suffragette { background-color: #5bbd72; }
+.text-suffragette { color: #5bbd72; }
+
+/* Weaver line */
+.bg-weaver { background-color: #823a62; }
+.text-weaver { color: #823a62; }
+
+/* Windrush line */
+.bg-windrush { background-color: #ed1b00; }
+.text-windrush { color: #ed1b00; }
