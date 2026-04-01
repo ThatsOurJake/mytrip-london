@@ -1,67 +1,87 @@
 # London Day Planner
 
-A strongly typed SvelteKit application for building time-aware London itineraries.
+London Day Planner is a SvelteKit app for building thoughtful London itineraries with timing, travel preferences, and practical route guidance in mind.
 
-## Features
+It is designed to be useful both for someone casually planning a day out and for someone who wants a clearer view of how stops, opening hours, and travel time fit together.
 
-- Hotel anchor + places of interest input
-- Transport preferences: walking plus optional cycling or public transport
-- Fixed-time activities (hard constraints)
-- Minimum dwell times per place
-- Conflict detection with actionable guidance
-- Local persistence (browser storage)
-- Printable PDF itinerary export
+## What It Does
 
-## Stack
+The planner helps you:
 
-- SvelteKit + TypeScript (strict mode)
-- Tailwind CSS 4
-- Modular service architecture for routing, optimization, scheduling, and export
+- set a hotel or starting point
+- add places you would like to visit
+- choose how you prefer to travel, including walking, cycling, and public transport
+- account for opening hours, fixed booking times, and visit length
+- spot conflicts when a plan becomes unrealistic
+- generate an itinerary you can review, share, and export
 
-## Run
+## Highlights
+
+- A local-first planning flow that keeps your current plan in the browser
+- Support for single-day and multi-day planning
+- London-focused place search to make hotel and stop entry easier
+- Flexible routing with live providers when available and graceful fallback when not
+- Printable PDF output for taking an itinerary with you
+- Shareable preview links for sending a finished plan to someone else
+
+## Getting Started
+
+Install dependencies and start the development server:
 
 ```sh
 pnpm install
 pnpm dev
 ```
 
-Checks:
+Useful checks:
 
 ```sh
 pnpm check
 pnpm build
 ```
 
-## Optional Environment Variables
+## Optional Live Routing Setup
 
-These are optional. If absent, the app automatically falls back to heuristic routing.
+The app works without API keys, but some journey estimates will be more detailed when live routing is available.
 
-- `ORS_API_KEY`: OpenRouteService key for live walking/cycling durations (server-side only)
-- `TFL_APP_KEY`: TfL Unified API key for mixed mode transit legs (server-side only)
-- `ROUTE_SEGMENT_CACHE_TTL_MS`: TTL in milliseconds for cached `/api/route-segment` responses
-- `ROUTING_DEBUG`: Enable provider request lifecycle logging without exposing raw API payloads
+Optional environment variables:
 
-Routing calls are proxied through `src/routes/api/route-segment/+server.ts` so API keys are never exposed to the browser.
-Matching route-segment requests are cached on the server for 30 minutes by default to reduce repeated TfL and ORS calls.
+- `ORS_API_KEY` for OpenRouteService walking and cycling routes
+- `TFL_APP_KEY` for TfL public transport journey data
+- `ROUTE_SEGMENT_CACHE_TTL_MS` to adjust how long route responses are cached
+- `ROUTING_DEBUG` to enable extra provider logging during development
 
-## Geocoding and Autocomplete
+If these are not set, the planner still works and falls back to built-in estimates where needed.
 
-- Service used: OpenStreetMap Nominatim search API
-- API key required: No
-- Scope in app: hotel and place search autocomplete with London-biased results
+## Data Sources
 
-## Project Structure
+The app can use:
 
-- `src/lib/types/planner.ts`: Core domain types
-- `src/lib/services/routing/*`: Routing providers + caching engine
-- `src/lib/services/optimizer/solver.ts`: Route ordering heuristic
-- `src/lib/services/scheduler/*`: Timeline builder + conflict analysis
-- `src/lib/services/export/pdf.ts`: Print-friendly PDF export
-- `src/lib/stores/planner-store.ts`: Stateful planner orchestration
-- `src/lib/components/planner/*`: UI components
-- `src/routes/+page.svelte`: Main planner page
+- OpenStreetMap Nominatim for place search
+- OpenRouteService for walking and cycling routes
+- TfL journey data for public transport
+- a heuristic fallback when live routing is unavailable
+
+API-backed routing runs through the app's server routes so browser clients do not need direct access to provider keys.
+
+## Project Layout
+
+The project follows normal SvelteKit conventions, with pages and API endpoints under `src/routes` and reusable app code under `src/lib`.
+
+The main areas are:
+
+- `src/routes`: pages, preview routes, and API endpoints
+- `src/lib/components/planner`: planner UI, grouped into `form`, `itinerary`, and `shared`
+- `src/lib/services/planner`: planner-specific formatting, day handling, and orchestration helpers
+- `src/lib/services/routing`: routing engine code used by the client-facing planner flow
+- `src/lib/server/routing`: server-only provider integrations and shared provider helpers
+- `src/lib/services/scheduler`: itinerary building and conflict handling
+- `src/lib/services/export`: PDF and print export support
+- `src/lib/stores`: application state management for the planner
+- `src/lib/types`: core domain types used across the app
 
 ## Notes
 
-- The MVP is intentionally single-day and local-first.
-- Routing provider calls are resilient: live API first, heuristic fallback second.
+- The project is London-focused by design.
+- The codebase is organised to keep route files light and domain logic grouped by responsibility.
+- Live routing is helpful, but it is not required for the planner to remain usable.

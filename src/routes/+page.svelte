@@ -2,10 +2,17 @@
 	import { mdiLoading, mdiMapMarkerPath } from '@mdi/js';
 	import openStreetMapLogo from '$lib/assets/openstreetmap.svg';
 	import tflLogo from '$lib/assets/transportforlondon.svg';
-	import AppIcon from '$lib/components/planner/AppIcon.svelte';
-	import { PRIMARY_BUTTON_CLASS, PRIMARY_BUTTON_DISABLED_CLASS, SECONDARY_BUTTON_CLASS } from '$lib/components/planner/button-classes';
+	import {
+		AppIcon,
+		ConflictPanel,
+		ItineraryTimeline,
+		PlannerForm,
+		PRIMARY_BUTTON_CLASS,
+		PRIMARY_BUTTON_DISABLED_CLASS,
+		SECONDARY_BUTTON_CLASS,
+		StopsTable
+	} from '$lib/components/planner';
 	import { plannerStore } from '$lib/stores';
-	import { ConflictPanel, ItineraryTimeline, PlannerForm, StopsTable } from '$lib/components/planner';
 	import type { Place, RouteDataSource, TransportMode, TransportPreference } from '$lib/types/planner';
 
 	const planner = plannerStore;

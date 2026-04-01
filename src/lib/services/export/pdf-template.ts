@@ -15,7 +15,7 @@ import {
 	transitLineName,
 	transitStopCountLabel,
 	legStartTime
-} from '$lib/components/planner/itinerary-ui';
+} from '$lib/components/planner/itinerary';
 import {
 	SUMMARY_NOTE_COPY,
 	TIME_AT_PLACES_LABEL,

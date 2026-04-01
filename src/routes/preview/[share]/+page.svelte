@@ -2,10 +2,12 @@
 	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { mdiAlertOutline, mdiOpenInNew } from '@mdi/js';
-	import AppIcon from '$lib/components/planner/AppIcon.svelte';
-	import { PRIMARY_BUTTON_CLASS } from '$lib/components/planner/button-classes';
-	import ConflictPanel from '$lib/components/planner/ConflictPanel.svelte';
-	import ItineraryTimeline from '$lib/components/planner/ItineraryTimeline.svelte';
+	import {
+		AppIcon,
+		ConflictPanel,
+		ItineraryTimeline,
+		PRIMARY_BUTTON_CLASS
+	} from '$lib/components/planner';
 	import { plannerStore } from '$lib/stores';
 	import type { PageData } from './$types';
 

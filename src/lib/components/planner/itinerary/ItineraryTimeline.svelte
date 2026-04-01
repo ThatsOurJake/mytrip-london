@@ -3,11 +3,11 @@
 	import { onMount, tick } from 'svelte';
 	import { buildSharedPlannerUrl } from '$lib/services/share/planner-share';
 	import type { PlannerInput, PlannerResult } from '$lib/types/planner';
-	import { SECONDARY_BUTTON_CLASS } from './button-classes';
+	import { SECONDARY_BUTTON_CLASS } from '../shared/button-classes';
 	import ItineraryMap from './ItineraryMap.svelte';
-	import ItinerarySummary from '$lib/components/planner/ItinerarySummary.svelte';
-	import ItineraryVisitList from '$lib/components/planner/ItineraryVisitList.svelte';
-	import type { DistanceUnit } from '$lib/components/planner/itinerary-ui';
+	import ItinerarySummary from './ItinerarySummary.svelte';
+	import ItineraryVisitList from './ItineraryVisitList.svelte';
+	import type { DistanceUnit } from './itinerary-ui';
 
 	const DISTANCE_UNIT_STORAGE_KEY = 'planner.distanceUnit';
 

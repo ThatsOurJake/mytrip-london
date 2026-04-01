@@ -3,7 +3,7 @@
 	import { plannedStayLabel } from '$lib/services/planner/ui-text';
 	import { formatDuration, parseTimeToMinutes } from '$lib/services/utils';
 	import type { PlannerInput, PlannerResult } from '$lib/types/planner';
-	import AppIcon from './AppIcon.svelte';
+	import AppIcon from '../shared/AppIcon.svelte';
 	import {
 		dayThemeStyle,
 		dayWindowLabel,

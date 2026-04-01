@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { DAY_PALETTE_OPTIONS } from '$lib/services/planner/day-colors';
 	import type { TripDayFullness, TripDayPalette, TripPlanningDay } from '$lib/types/planner';
-	import { PRIMARY_BUTTON_CLASS, SECONDARY_BUTTON_CLASS, SECONDARY_BUTTON_DISABLED_CLASS } from './button-classes';
-	import FieldLabel from './FieldLabel.svelte';
+	import { PRIMARY_BUTTON_CLASS, SECONDARY_BUTTON_CLASS, SECONDARY_BUTTON_DISABLED_CLASS } from '../shared/button-classes';
+	import FieldLabel from '../shared/FieldLabel.svelte';
 	import type { FullnessOption } from './planner-form-types';
 	import './planner-form-shared.css';
 

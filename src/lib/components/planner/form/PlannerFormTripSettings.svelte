@@ -2,7 +2,7 @@
 	import type { LocationSuggestion } from '$lib/services/geocode';
 	import type { RouteDataSource, TransportPreference } from '$lib/types/planner';
 	import type { ActiveTravelOption, DataSourceOption, TransitOption } from './planner-form-types';
-	import AppIcon from './AppIcon.svelte';
+	import AppIcon from '../shared/AppIcon.svelte';
 	import LocationAutocomplete from './LocationAutocomplete.svelte';
 	import './planner-form-shared.css';
 

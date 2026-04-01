@@ -2,8 +2,8 @@
 	import type { LocationSuggestion } from '$lib/services/geocode';
 	import type { TripPlanningDay } from '$lib/types/planner';
 	import { VISIT_TIME_FIELD_LABEL, VISIT_TIME_PLACE_INFO } from '$lib/services/planner/ui-text';
-	import { PRIMARY_BUTTON_CLASS } from './button-classes';
-	import FieldLabel from './FieldLabel.svelte';
+	import { PRIMARY_BUTTON_CLASS } from '../shared/button-classes';
+	import FieldLabel from '../shared/FieldLabel.svelte';
 	import LocationAutocomplete from './LocationAutocomplete.svelte';
 	import './planner-form-shared.css';
 

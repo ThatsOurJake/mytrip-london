@@ -1,12 +1,3 @@
-export { default as AppIcon } from './AppIcon.svelte';
-export { default as ConflictPanel } from './ConflictPanel.svelte';
-export { default as FieldLabel } from './FieldLabel.svelte';
-export { default as InfoPopover } from './InfoPopover.svelte';
-export { default as ItineraryMap } from './ItineraryMap.svelte';
-export { default as ItineraryTimeline } from './ItineraryTimeline.svelte';
-export { default as LocationAutocomplete } from './LocationAutocomplete.svelte';
-export { default as PlannerForm } from './PlannerForm.svelte';
-export { default as PlannerFormAddPlace } from './PlannerFormAddPlace.svelte';
-export { default as PlannerFormTripDays } from './PlannerFormTripDays.svelte';
-export { default as PlannerFormTripSettings } from './PlannerFormTripSettings.svelte';
-export { default as StopsTable } from './StopsTable.svelte';
+export * from './shared';
+export * from './form';
+export * from './itinerary';

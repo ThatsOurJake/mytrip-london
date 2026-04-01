@@ -8,9 +8,9 @@
 	} from '$lib/services/planner/ui-text';
 	import { formatDuration } from '$lib/services/utils';
 	import type { PlannerInput, PlannerResult } from '$lib/types/planner';
-	import AppIcon from './AppIcon.svelte';
-	import { SECONDARY_BUTTON_CLASS } from './button-classes';
-	import SeparatorDot from './SeparatorDot.svelte';
+	import AppIcon from '../shared/AppIcon.svelte';
+	import { SECONDARY_BUTTON_CLASS } from '../shared/button-classes';
+	import SeparatorDot from '../shared/SeparatorDot.svelte';
 	import { buildDaySummaries, dayUsageClasses, pillTitle, sourceList, sourceMeta, type DistanceUnit } from './itinerary-ui';
 	import { predictedTflCostLabel, transportPreferenceSummary } from '$lib/services/planner/journey-presentation';
 
