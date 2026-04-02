@@ -85,3 +85,5 @@ The main areas are:
 - The project is London-focused by design.
 - The codebase is organised to keep route files light and domain logic grouped by responsibility.
 - Live routing is helpful, but it is not required for the planner to remain usable.
+Copyright (c) ThatsOurJake (https://github.com/ThatsOurJake/mytrip-london)  
+Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE).
