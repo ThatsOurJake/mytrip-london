@@ -1,0 +1,30 @@
+# Dependencies
+node_modules
+
+# SvelteKit generated files
+.svelte-kit
+
+# Build output (rebuilt inside Docker)
+build
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Version control
+.git
+.gitignore
+
+# Editor
+.vscode
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
