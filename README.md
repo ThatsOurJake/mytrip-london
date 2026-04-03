@@ -1,6 +1,6 @@
-# London Day Planner
+# My Trip · London
 
-London Day Planner is a SvelteKit app for building thoughtful London itineraries with timing, travel preferences, and practical route guidance in mind.
+[mytrip.london](https://mytrip.london) is a SvelteKit app for building thoughtful London itineraries with timing, travel preferences, and practical route guidance in mind.
 
 It is designed to be useful both for someone casually planning a day out and for someone who wants a clearer view of how stops, opening hours, and travel time fit together.
 

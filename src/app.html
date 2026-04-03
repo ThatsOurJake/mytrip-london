@@ -1,11 +1,30 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
-	</body>
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#152C4E" />
+	<link rel="manifest" href="/manifest.json" />
+	<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+	<link rel="canonical" href="https://mytrip.london/" />
+	<!-- Open Graph -->
+	<meta property="og:site_name" content="My Trip · London" />
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://mytrip.london/" />
+	<meta property="og:title" content="My Trip · London" />
+	<meta property="og:description"
+		content="Plan a smart, time-aware London itinerary with mixed transport, opening hours, and conflict detection." />
+	<!-- Twitter / X card -->
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="My Trip · London" />
+	<meta name="twitter:description"
+		content="Plan a smart, time-aware London itinerary with mixed transport, opening hours, and conflict detection." />
+	%sveltekit.head%
+</head>
+
+<body data-sveltekit-preload-data="hover">
+	<div style="display: contents">%sveltekit.body%</div>
+</body>
+
 </html>

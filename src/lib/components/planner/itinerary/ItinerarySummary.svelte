@@ -126,7 +126,7 @@
 	{#each buildDaySummaries(result) as daySummary}
 		<div
 			title={pillTitle(daySummary.label, `${daySummary.stops} stops • ${formatDuration(daySummary.usedMinutes)} planned against ${formatDuration(daySummary.targetMinutes)} target`)}
-			class={`rounded-full border px-3 py-2 text-sm font-medium ${dayUsageClasses(daySummary.status)}`}
+			class={`rounded-md border px-3 py-2 text-sm font-medium ${dayUsageClasses(daySummary.status)}`}
 		>
 			<span class="font-semibold">{daySummary.label}</span>
 			<SeparatorDot />

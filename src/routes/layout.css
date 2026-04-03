@@ -1,18 +1,25 @@
 @import 'tailwindcss';
 
+@theme {
+	--color-brand: #152C4E;
+	/* Brand gold passes AA only on --color-brand (navy) backgrounds.
+	   Do not use as text or icon colour on light or stone backgrounds. */
+	--color-brand-gold: #C9A84C;
+}
+
 :root {
 	font-family: 'DM Sans', 'Avenir Next', 'Segoe UI', sans-serif;
 	color: #0f172a;
-	background: #e7f8f2;
+	background: #EDE9E3;
 }
 
 body {
 	min-height: 100vh;
 	margin: 0;
 	background:
-		radial-gradient(circle at 15% 20%, rgb(56 189 148 / 22%) 0, transparent 28%),
-		radial-gradient(circle at 85% 15%, rgb(15 118 110 / 28%) 0, transparent 33%),
-		linear-gradient(180deg, #f5fffc 0%, #ecf6ff 100%);
+		radial-gradient(circle at 15% 20%, rgb(21 44 78 / 8%) 0, transparent 28%),
+		radial-gradient(circle at 85% 15%, rgb(201 168 76 / 10%) 0, transparent 33%),
+		linear-gradient(180deg, #F5F2EC 0%, #EDE9E3 100%);
 }
 
 button,
@@ -26,7 +33,7 @@ button:not(:disabled) {
 }
 
 :focus-visible {
-	outline: 3px solid #0f766e;
+	outline: 3px solid #152C4E;
 	outline-offset: 2px;
 }
 

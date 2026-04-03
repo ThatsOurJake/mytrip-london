@@ -33,13 +33,13 @@
 </script>
 
 <svelte:head>
-	<title>Shared London Day Planner Preview</title>
+	<title>Shared itinerary preview · My Trip · London</title>
 </svelte:head>
 
 <main class="mx-auto max-w-7xl px-4 py-8 md:px-8">
 	<header class="rounded-3xl border border-slate-300 bg-white/90 p-6 shadow-sm">
-		<p class="text-sm font-semibold uppercase tracking-wider text-teal-700">Shared preview</p>
-		<h1 class="mt-2 text-3xl font-bold text-slate-900 md:text-4xl">Preview a shared London itinerary</h1>
+		<p class="text-sm font-semibold uppercase tracking-wider text-brand">mytrip.london</p>
+		<h1 class="mt-2 text-3xl font-bold text-slate-900 md:text-4xl">Shared itinerary preview</h1>
 		<p class="mt-3 max-w-3xl text-slate-700">
 			This page is serverless and read-only. It does not touch your saved planner unless you explicitly import the itinerary.
 		</p>

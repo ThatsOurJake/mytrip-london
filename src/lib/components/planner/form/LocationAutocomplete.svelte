@@ -174,7 +174,7 @@
     background: #fff;
   }
   .field:focus {
-    outline: 2px solid #0f766e;
+    outline: 2px solid #152C4E;
     outline-offset: 1px;
   }
 </style>

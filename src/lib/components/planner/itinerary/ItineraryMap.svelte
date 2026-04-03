@@ -151,7 +151,7 @@
 
 		if (segments.length === 0) {
 			L.polyline(fallbackCoordinates, {
-				color: '#0f766e',
+				color: '#152C4E',
 				weight: 4,
 				opacity: 0.8,
 				dashArray: '6 6'
@@ -167,8 +167,8 @@
 		for (const stop of stops) {
 			const marker = L.circleMarker([stop.lat, stop.lng], {
 				radius: stop.variant === 'hotel' ? 9 : 8,
-				color: stop.variant === 'hotel' ? '#113b92' : '#0f766e',
-				fillColor: stop.variant === 'hotel' ? '#113b92' : '#14b8a6',
+				color: stop.variant === 'hotel' ? '#113b92' : '#152C4E',
+				fillColor: stop.variant === 'hotel' ? '#113b92' : '#2A5298',
 				fillOpacity: 0.92,
 				weight: 2
 			}).addTo(mapInstance);

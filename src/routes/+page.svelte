@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { mdiLoading, mdiMapMarkerPath } from '@mdi/js';
+	import { mdiCoffee, mdiGithub, mdiLoading, mdiMapMarkerPath } from '@mdi/js';
 	import openStreetMapLogo from '$lib/assets/openstreetmap.svg';
 	import tflLogo from '$lib/assets/transportforlondon.svg';
 	import {
@@ -106,10 +106,10 @@
 </script>
 
 <svelte:head>
-	<title>London Day Planner</title>
+	<title>My Trip · London</title>
 	<meta
 		name="description"
-		content="Plan an optimised London itinerary with timing constraints, mixed transport, and conflict alerts."
+		content="Plan a smart, time-aware London itinerary with mixed transport, opening hours, and conflict detection."
 	/>
 </svelte:head>
 
@@ -117,11 +117,10 @@
 
 <main id="main-content" class="mx-auto max-w-7xl px-4 py-8 md:px-8">
 	<header class="rounded-3xl border border-slate-300 bg-white/70 p-6 shadow-sm backdrop-blur">
-		<p class="text-sm font-semibold uppercase tracking-wider text-teal-700">London UK Trip Optimiser</p>
-		<h1 class="mt-2 text-3xl font-bold text-slate-900 md:text-4xl">Build a smart, time-aware day itinerary</h1>
+		<p class="text-sm font-semibold uppercase tracking-wider text-brand">mytrip.london</p>
+		<h1 class="mt-2 text-3xl font-bold text-slate-900 md:text-4xl">Plan your trip around London</h1>
 		<p class="mt-3 max-w-3xl text-slate-700">
-			Set your hotel, add places, enforce arrival constraints, and compare walking, cycling, or mixed transit routes.
-			The planner highlights impossible schedules and tells you where time must be reduced.
+			Add your hotel, pick the places you want to visit, and let the planner build a time-aware itinerary around opening hours, travel time, and your preferred way of getting around.
 		</p>
 
 		<div class="mt-5 flex flex-wrap gap-3">
@@ -218,46 +217,76 @@
 		</div>
 	</section>
 
-	<footer class="mt-8 rounded-xl border border-slate-200 bg-white/80 p-4 text-xs text-slate-700">
-		<p class="font-semibold text-slate-900">Data sources used</p>
-		<div class="mt-3 flex flex-wrap gap-2">
-			<a
-				href="https://api-portal.tfl.gov.uk/"
-				target="_blank"
-				rel="noreferrer"
-				class="inline-flex items-center gap-2 rounded-full bg-[#113b92] px-3 py-1 font-semibold text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#113b92]"
-				aria-label="Open the TfL Unified API website in a new tab"
-			>
-				<img src={tflLogo} alt="" class="h-4 w-4 rounded-full bg-white p-0.5" />
-				TfL Unified API
-			</a>
-			<a
-				href="https://nominatim.openstreetmap.org/"
-				target="_blank"
-				rel="noreferrer"
-				class="inline-flex items-center gap-2 rounded-full bg-[#7ebc6f] px-3 py-1 font-semibold text-slate-900 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4d7c0f]"
-				aria-label="Open the OpenStreetMap Nominatim website in a new tab"
-			>
-				<img src={openStreetMapLogo} alt="" class="h-4 w-4 rounded-full bg-white p-0.5" />
-				OpenStreetMap Nominatim
-			</a>
-			<span class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1 font-semibold text-white">
-				<AppIcon path={mdiMapMarkerPath} size={14} decorative={true} />
-				Heuristic fallback
-			</span>
+	<footer class="mt-8 rounded-xl border border-slate-200 bg-white/80 p-5 text-xs text-slate-700">
+		<div class="grid gap-6 sm:grid-cols-2">
+			<div>
+				<p class="font-semibold text-slate-900">Data sources</p>
+				<div class="mt-2 flex flex-wrap gap-2">
+					<a
+						href="https://api-portal.tfl.gov.uk/"
+						target="_blank"
+						rel="noreferrer"
+						class="inline-flex items-center gap-2 rounded-full bg-[#113b92] px-3 py-1 font-semibold text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#113b92]"
+						aria-label="Open the TfL Unified API website in a new tab"
+					>
+						<img src={tflLogo} alt="" class="h-4 w-4 rounded-full bg-white p-0.5" />
+						TfL Unified API
+					</a>
+					<a
+						href="https://nominatim.openstreetmap.org/"
+						target="_blank"
+						rel="noreferrer"
+						class="inline-flex items-center gap-2 rounded-full bg-[#7ebc6f] px-3 py-1 font-semibold text-slate-900 hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4d7c0f]"
+						aria-label="Open the OpenStreetMap Nominatim website in a new tab"
+					>
+						<img src={openStreetMapLogo} alt="" class="h-4 w-4 rounded-full bg-white p-0.5" />
+						OpenStreetMap Nominatim
+					</a>
+					<span class="inline-flex items-center gap-2 rounded-full bg-slate-900 px-3 py-1 font-semibold text-white">
+						<AppIcon path={mdiMapMarkerPath} size={14} decorative={true} />
+						Heuristic fallback
+					</span>
+				</div>
+				<p class="mt-3 leading-relaxed">
+					Routing uses
+					<a href="https://api-portal.tfl.gov.uk/" target="_blank" rel="noreferrer" class="font-semibold text-slate-900 underline underline-offset-2">TfL Unified API</a>,
+					<a href="https://openrouteservice.org/" target="_blank" rel="noreferrer" class="font-semibold text-slate-900 underline underline-offset-2">OpenRouteService</a>,
+					and a heuristic fallback when live routing is unavailable. Location search uses
+					<a href="https://nominatim.openstreetmap.org/" target="_blank" rel="noreferrer" class="font-semibold text-slate-900 underline underline-offset-2">OpenStreetMap Nominatim</a>.
+				</p>
+			</div>
+			<div class="flex flex-col gap-3 sm:items-end">
+				<div class="sm:text-right">
+					<p class="font-semibold text-slate-900">About</p>
+				</div>
+				<div class="flex flex-wrap gap-2">
+					<a
+						href="https://github.com/ThatsOurJake/mytrip-london"
+						target="_blank"
+						rel="noreferrer"
+						class="inline-flex items-center gap-1.5 rounded-full bg-slate-900 px-3 py-1 font-semibold text-white hover:bg-slate-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
+						aria-label="View source on GitHub"
+					>
+						<AppIcon path={mdiGithub} size={14} decorative={true} />
+						GitHub
+					</a>
+					<a
+						href="https://ko-fi.com/thatsourjake"
+						target="_blank"
+						rel="noreferrer"
+						class="inline-flex items-center gap-1.5 rounded-full bg-[#FF5E5B] px-3 py-1 font-semibold text-white hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF5E5B]"
+						aria-label="Support on Ko-fi"
+					>
+						<AppIcon path={mdiCoffee} size={14} decorative={true} />
+						Buy me a coffee
+					</a>
+				</div>
+				<p class="leading-relaxed sm:text-right">
+					Built by <a href="https://github.com/ThatsOurJake" target="_blank" rel="noreferrer" class="font-semibold text-slate-900 underline underline-offset-2 hover:text-slate-700">ThatsOurJake</a>.<br/>
+					Source available, free to use for personal and noncommercial purposes.
+				</p>
+			</div>
 		</div>
-		<p class="mt-3">
-			Routing uses
-			<a href="https://api-portal.tfl.gov.uk/" target="_blank" rel="noreferrer" class="font-semibold text-slate-900 underline underline-offset-2">
-				TfL Unified API
-			</a>,
-			<a href="https://openrouteservice.org/" target="_blank" rel="noreferrer" class="font-semibold text-slate-900 underline underline-offset-2">
-				OpenRouteService
-			</a>, and a heuristic fallback when live routing is unavailable. Location search uses
-			<a href="https://nominatim.openstreetmap.org/" target="_blank" rel="noreferrer" class="font-semibold text-slate-900 underline underline-offset-2">
-				OpenStreetMap Nominatim
-			</a>.
-		</p>
 	</footer>
 </main>
 

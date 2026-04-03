@@ -38,11 +38,11 @@
   }
 
   .info-trigger:hover {
-    color: #0f766e;
+    color: #152C4E;
   }
 
   .info-trigger:focus-visible {
-    outline: 2px solid #0f766e;
+    outline: 2px solid #152C4E;
     outline-offset: 2px;
     border-radius: 999px;
   }

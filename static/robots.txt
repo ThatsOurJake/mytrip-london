@@ -1,3 +1,56 @@
-# allow crawling everything by default
+# Allow all crawlers by default (including Furl)
 User-agent: *
 Disallow:
+
+# OpenAI
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+# Anthropic
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+# Google AI training
+User-agent: Google-Extended
+Disallow: /
+
+# Common Crawl (primary source for AI training datasets)
+User-agent: CCBot
+Disallow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Disallow: /
+
+# Meta AI
+User-agent: FacebookBot
+Disallow: /
+
+# ByteDance / TikTok
+User-agent: Bytespider
+Disallow: /
+
+# Apple AI
+User-agent: Applebot-Extended
+Disallow: /
+
+# Amazon Alexa
+User-agent: Amazonbot
+Disallow: /
+
+# Diffbot
+User-agent: Diffbot
+Disallow: /
+
+# Cohere
+User-agent: cohere-ai
+Disallow: /
