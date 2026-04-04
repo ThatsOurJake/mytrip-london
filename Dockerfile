@@ -23,6 +23,7 @@ WORKDIR /app
 # Only copy what the server needs at runtime
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/package.json ./
+COPY --from=builder /app/pnpm-lock.yaml ./
 
 # adapter-node requires the production deps at runtime
 # (only a handful — no devDeps, no source)
