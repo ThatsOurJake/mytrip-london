@@ -6,7 +6,7 @@ then
     exit 1
 fi
 
-VERSION=$(jq '.version' package.json)
+VERSION=$(jq -r '.version' package.json)
 
 docker build -t registry.sussy-servers.uk/public/my-trip-london:$VERSION .
 docker build -t registry.sussy-servers.uk/public/my-trip-london:latest .
