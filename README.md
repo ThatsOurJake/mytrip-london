@@ -40,6 +40,27 @@ pnpm check
 pnpm build
 ```
 
+## Version Bumping
+
+To bump the app version and write a changelog entry, run this from the project root:
+
+```sh
+pnpm changelog
+```
+
+The script will:
+
+- ask whether the release is `major`, `minor`, or `patch`
+- update the root `package.json` version
+- prompt for changelog lines until you submit a blank entry
+- write a dated changelog file into `changelogs/`
+
+You can also pass the version type directly:
+
+```sh
+./scripts/changelog.sh patch
+```
+
 ## Optional Live Routing Setup
 
 The app works without API keys, but some journey estimates will be more detailed when live routing is available.
