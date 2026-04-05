@@ -19,7 +19,6 @@ import {
 import {
 	SUMMARY_NOTE_COPY,
 	TIME_AT_PLACES_LABEL,
-	itineraryStatusLabel,
 	plannedStayLabel,
 	routeDataSourceLabel
 } from '$lib/services/planner/ui-text';
@@ -297,7 +296,6 @@ function renderSummarySection(input: PlannerInput, result: PlannerResult, routeS
 		<div class="summary-grid">
 			<div class="card card-primary"><div class="kicker">Travel Time</div><div class="value value-large">${escapeHtml(formatDuration(result.totalTravelMinutes))}</div><div class="note">${SUMMARY_NOTE_COPY.travelTime}</div></div>
 			<div class="card card-primary"><div class="kicker">${TIME_AT_PLACES_LABEL}</div><div class="value value-large">${escapeHtml(formatDuration(result.totalDwellMinutes))}</div><div class="note">${SUMMARY_NOTE_COPY.timeAtPlaces}</div></div>
-			<div class="card card-primary"><div class="kicker">Trip Days</div><div class="value value-large">${result.daysUsed} of ${result.planningDays.length}</div><div class="note">${SUMMARY_NOTE_COPY.tripDays}</div></div>
 			<div class="card card-primary"><div class="kicker">Predicted Cost</div><div class="value value-large">${escapeHtml(predictedTflCostLabel(result))}</div><div class="note">${SUMMARY_NOTE_COPY.predictedCost}</div></div>
 		</div>
 
@@ -305,7 +303,6 @@ function renderSummarySection(input: PlannerInput, result: PlannerResult, routeS
 			<div class="secondary-cards">
 				<div class="card card-secondary"><div class="kicker">Mode</div><div class="value value-secondary">${escapeHtml(transportPreferenceSummary(result.modeUsed, result.preferencesUsed))}</div></div>
 				<div class="card card-secondary"><div class="kicker">Data Source</div><div class="value value-secondary">${escapeHtml(dataSourceLabel)}</div></div>
-				<div class="card card-secondary"><div class="kicker">Status</div><div class="value value-secondary">${itineraryStatusLabel(result.feasible)}</div></div>
 			</div>
 			${routeSourcesCard}
 		</div>
@@ -333,11 +330,11 @@ function renderStyles(): string {
 			.brand-tfl { background: #113b92; color: #fff; }
 			.brand-osm { background: #7ebc6f; color: #0f172a; }
 			.brand-heuristic { background: #0f172a; color: #fff; }
-			.summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 18px 0 12px; }
+			.summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 18px 0 12px; }
 			.card { border: 1px solid #cbd5e1; border-radius: 16px; padding: 10px 12px; background: #f8fafc; }
 			.card-primary { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
 			.secondary-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; margin: 0 0 18px; align-items: stretch; }
-			.secondary-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+			.secondary-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 			.card-secondary { display: flex; flex-direction: column; justify-content: center; min-height: 72px; padding: 9px 12px; }
 			.kicker { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: #475569; font-weight: 700; }
 			.value { font-size: 14px; font-weight: 700; margin-top: 4px; line-height: 1.3; }

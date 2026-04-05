@@ -81,6 +81,7 @@
 	} = $props();
 
 	let hotelName = $state('');
+	let tripName = $state('');
 	let hotelLat = $state('');
 	let hotelLng = $state('');
 	let dayStart = $state('08:30');
@@ -93,6 +94,7 @@
 	let planningDays = $state<TripPlanningDay[]>([]);
 
 	$effect(() => {
+		tripName = value.tripName;
 		hotelName = value.hotelName;
 		hotelLat = value.hotelLat.toString();
 		hotelLng = value.hotelLng.toString();
@@ -274,6 +276,7 @@
 
 	function hasPendingTripChanges(): boolean {
 		return (
+			tripName !== value.tripName ||
 			hotelName !== value.hotelName ||
 			hotelLat !== value.hotelLat.toString() ||
 			hotelLng !== value.hotelLng.toString() ||
@@ -290,6 +293,7 @@
 
 	function saveSettings(): void {
 		onSaveSettings({
+			tripName,
 			hotelName,
 			hotelLat: Number(hotelLat),
 			hotelLng: Number(hotelLng),
@@ -373,6 +377,7 @@
 
 <section aria-labelledby="planner-config-title" class="space-y-6">
 	<PlannerFormTripSettings
+		{tripName}
 		{hotelSearchQuery}
 		{hotelName}
 		{hotelLat}
@@ -385,6 +390,7 @@
 		{selectionSummary}
 		{dataSource}
 		{dataSourceNotice}
+		onTripNameChange={(value) => (tripName = value)}
 		onHotelNameChange={(value) => (hotelName = value)}
 		onHotelLatChange={(value) => (hotelLat = value)}
 		onHotelLngChange={(value) => (hotelLng = value)}

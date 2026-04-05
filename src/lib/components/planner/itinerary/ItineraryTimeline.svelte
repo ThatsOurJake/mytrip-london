@@ -43,19 +43,19 @@
 	});
 
 	async function copyShareLink(): Promise<void> {
-		if (!browser || !shareEnabled || !input || !result) {
+		if (!browser || !shareEnabled || !input) {
 			return;
 		}
 
-		const shareUrl = buildSharedPlannerUrl(window.location.origin, input, result);
+		const shareUrl = buildSharedPlannerUrl(window.location.origin, input);
+		const openedWindow = window.open(shareUrl, '_blank', 'noopener,noreferrer');
 
-		try {
-			await navigator.clipboard.writeText(shareUrl);
-			shareStatus = 'Share link copied. It includes hotel, stops, timings, and itinerary data in the URL.';
-		} catch {
-			window.prompt('Copy this share link', shareUrl);
-			shareStatus = 'Share link ready. It includes hotel, stops, timings, and itinerary data in the URL.';
+		if (openedWindow) {
+			shareStatus = 'Shared trip opened in a new tab. Use the share button there to copy the link.';
+			return;
 		}
+
+		window.location.assign(shareUrl);
 	}
 
 	async function toggleMapPanel(): Promise<void> {

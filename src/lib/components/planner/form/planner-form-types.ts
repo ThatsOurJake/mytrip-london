@@ -28,6 +28,7 @@ export interface FullnessOption {
 }
 
 export interface PlannerFormValue {
+  tripName: string;
   hotelName: string;
   hotelLat: number;
   hotelLng: number;

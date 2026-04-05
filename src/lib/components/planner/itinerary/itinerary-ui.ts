@@ -174,6 +174,11 @@ export function lineTextClass(leg: SegmentLeg): string {
   return key ? `text-${key}` : 'text-slate-700';
 }
 
+export function lineIconClass(leg: SegmentLeg): string {
+  const key = lineColourKey(leg);
+  return key ? `text-${key}` : 'text-slate-900';
+}
+
 export function transitLineName(leg: SegmentLeg): string {
   return leg.lineIdentifier?.name || leg.lineIdentifier?.id || 'public transport';
 }

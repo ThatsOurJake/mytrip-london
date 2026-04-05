@@ -91,6 +91,7 @@ const defaultState: PlannerStoreState = {
       location: { lat: 51.5072, lng: -0.1276 }
     },
     settings: {
+      tripName: '',
       dayStart: '08:30',
       dayEnd: '21:00',
       mode: 'walking',
@@ -214,6 +215,7 @@ function createPlannerStore() {
       }));
     },
     setSettings(settings: {
+      tripName?: string;
       dayStart: string;
       dayEnd: string;
       mode: TransportMode;
@@ -226,6 +228,7 @@ function createPlannerStore() {
       updateInput((input) => ({
         ...input,
         settings: normalizePlannerSettings({
+          tripName: settings.tripName ?? input.settings.tripName,
           dayStart: settings.dayStart,
           dayEnd: settings.dayEnd,
           mode: settings.mode,

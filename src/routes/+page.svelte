@@ -18,6 +18,7 @@
 	const planner = plannerStore;
 
 	function handleSaveSettings(value: {
+		tripName: string;
 		hotelName: string;
 		hotelLat: number;
 		hotelLng: number;
@@ -32,6 +33,7 @@
 	}): void {
 		planner.setHotel(value.hotelName, value.hotelLat, value.hotelLng);
 		planner.setSettings({
+			tripName: value.tripName,
 			dayStart: value.dayStart,
 			dayEnd: value.dayEnd,
 			mode: value.mode,
@@ -148,6 +150,7 @@
 		<div class="min-w-0 space-y-6">
 			<PlannerForm
 				value={{
+					tripName: $planner.input.settings.tripName ?? '',
 					hotelName: $planner.input.hotel.name,
 					hotelLat: $planner.input.hotel.location.lat,
 					hotelLng: $planner.input.hotel.location.lng,

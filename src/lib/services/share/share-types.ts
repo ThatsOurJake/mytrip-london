@@ -1,20 +1,13 @@
 import type {
-  Coordinates,
-  PlannerConflict,
   PlannerInput,
-  PlannerResult,
-  PlannerWarning,
-  RouteSegment,
-  ScheduledVisit,
-  SegmentLeg
+  Coordinates
 } from '$lib/types/planner';
 
-export const SHARED_PLANNER_STATE_VERSION = 2;
+export const SHARED_PLANNER_STATE_VERSION = 3;
 
 export interface SharedPlannerState {
   version: number;
   input: PlannerInput;
-  result: PlannerResult;
 }
 
 export type PackedCoordinates = [lat: number, lng: number];
@@ -42,6 +35,7 @@ export type PackedPlace = [
 ];
 
 export type PackedPlannerSettings = [
+  tripName: string | undefined,
   dayStart: string,
   dayEnd: string,
   mode: PlannerInput['settings']['mode'],
@@ -60,110 +54,9 @@ export type PackedPlannerInput = [
   settings: PackedPlannerSettings
 ];
 
-export type PackedLineIdentifier = [id: string | undefined, name: string | undefined, type: string | undefined] | undefined;
-
-export type PackedSegmentLeg = [
-  mode: SegmentLeg['mode'],
-  minutes: number,
-  distanceKm: number,
-  description: string,
-  originName: string | undefined,
-  destinationName: string | undefined,
-  lineIdentifier: PackedLineIdentifier,
-  scheduledDepartureTime: string | undefined,
-  scheduledArrivalTime: string | undefined,
-  intermediateStopNames: string[] | undefined
-];
-
-export type PackedRouteSegment = [
-  source: string,
-  totalMinutes: number,
-  distanceKm: number,
-  fareGbp: number | null | undefined,
-  legs: PackedSegmentLeg[]
-];
-
-export type PackedScheduledVisit = [
-  placeId: string,
-  visitType: ScheduledVisit['visitType'],
-  dayIndex: number,
-  arrivalTime: string,
-  departureTime: string,
-  dwellMinutes: number,
-  windowStatus: ScheduledVisit['windowStatus'],
-  travelFromPrevious: PackedRouteSegment | undefined,
-  recommendedLeaveByTime: string | undefined,
-  freeTimeBeforeVisitMinutes: number | undefined
-];
-
-export type PackedConflict = [
-  placeId: string,
-  type: PlannerConflict['type'],
-  message: string,
-  requiredReductionMinutes: number | undefined
-];
-
-export type PackedWarning = [
-  placeId: string,
-  type: PlannerWarning['type'],
-  message: string
-];
-
-export type PackedPlannerResult = [
-  itinerary: PackedScheduledVisit[],
-  conflicts: PackedConflict[],
-  warnings: PackedWarning[]
-];
-
 export interface PackedEncodedSharedPlannerState {
   version: typeof SHARED_PLANNER_STATE_VERSION;
   input: PackedPlannerInput;
-  result: PackedPlannerResult;
-}
-
-export interface CompactSharedRouteSegment {
-  source: string;
-  totalMinutes: number;
-  distanceKm: number;
-  fareGbp?: number | null;
-  legs: SegmentLeg[];
-}
-
-export interface CompactSharedVisit {
-  placeId: string;
-  visitType: ScheduledVisit['visitType'];
-  dayIndex: number;
-  arrivalTime: string;
-  departureTime: string;
-  dwellMinutes: number;
-  windowStatus: ScheduledVisit['windowStatus'];
-  travelFromPrevious?: CompactSharedRouteSegment;
-  recommendedLeaveByTime?: string;
-  freeTimeBeforeVisitMinutes?: number;
-  placeName?: string;
-  dayLabel?: string;
-  dayDate?: string;
-}
-
-export interface CompactSharedConflict {
-  placeId: string;
-  type: PlannerConflict['type'];
-  message: string;
-  requiredReductionMinutes?: number;
-  placeName?: string;
-}
-
-export interface CompactSharedWarning {
-  placeId: string;
-  type: PlannerWarning['type'];
-  message: string;
-  placeName?: string;
-}
-
-export interface CompactSharedPlannerResult {
-  itinerary: CompactSharedVisit[];
-  conflicts: CompactSharedConflict[];
-  warnings: CompactSharedWarning[];
 }
 
 export function packedCoordinates(lat: number, lng: number): PackedCoordinates {
@@ -173,5 +66,3 @@ export function packedCoordinates(lat: number, lng: number): PackedCoordinates {
 export function unpackCoordinates([lat, lng]: PackedCoordinates): Coordinates {
   return { lat, lng };
 }
-
-export type SharedRouteSegment = Omit<RouteSegment, 'geometry' | 'fromId' | 'toId'>;

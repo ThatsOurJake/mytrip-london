@@ -7,6 +7,7 @@
 	import './planner-form-shared.css';
 
 	let {
+		tripName,
 		hotelSearchQuery,
 		hotelName,
 		hotelLat,
@@ -19,12 +20,14 @@
 		selectionSummary,
 		dataSource,
 		dataSourceNotice,
+		onTripNameChange,
 		onHotelNameChange,
 		onHotelLatChange,
 		onHotelLngChange,
 		onHotelSuggestionSelect,
 		onDataSourceChange
 	}: {
+		tripName: string;
 		hotelSearchQuery: string;
 		hotelName: string;
 		hotelLat: string;
@@ -37,6 +40,7 @@
 		selectionSummary: () => string;
 		dataSource: RouteDataSource;
 		dataSourceNotice: () => string;
+		onTripNameChange: (value: string) => void;
 		onHotelNameChange: (value: string) => void;
 		onHotelLatChange: (value: string) => void;
 		onHotelLngChange: (value: string) => void;
@@ -53,6 +57,10 @@
 		<div class="rounded-xl border border-slate-200 bg-slate-50/40 p-4">
 			<h3 class="text-base font-semibold text-slate-900">Start point and trip details</h3>
 			<div class="mt-3 space-y-3">
+				<label class="flex flex-col gap-1">
+					<span class="text-sm font-medium text-slate-700">Trip name</span>
+					<input class="field" type="text" placeholder="Long weekend in London" value={tripName} oninput={(event) => onTripNameChange((event.currentTarget as HTMLInputElement).value)} />
+				</label>
 				<LocationAutocomplete label="Hotel search (London)" value={hotelSearchQuery} placeholder="Search for your hotel" onSelect={onHotelSuggestionSelect} />
 				<label class="flex flex-col gap-1">
 					<span class="text-sm font-medium text-slate-700">Hotel display name</span>

@@ -47,6 +47,7 @@ export interface Place {
 }
 
 export interface PlannerSettings {
+  tripName?: string;
   dayStart: string;
   dayEnd: string;
   mode: TransportMode;

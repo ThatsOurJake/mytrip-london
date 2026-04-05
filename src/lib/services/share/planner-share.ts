@@ -1,8 +1,9 @@
 import LZString from 'lz-string';
-import type { PlannerInput, PlannerResult } from '$lib/types/planner';
-import { createPackedEncodedSharedPlannerState, packPlannerInput, packPlannerResult } from './share-pack';
-import { buildSharedPlannerState } from './share-state';
-import { unpackPlannerInput, unpackPlannerResult } from './share-unpack';
+import type { PlannerInput } from '$lib/types/planner';
+import { normalizePlannerSettings } from '$lib/services/planner/day-settings';
+import { normalizePlannerInputPlaces } from '$lib/services/planner/place-constraints';
+import { createPackedEncodedSharedPlannerState, packPlannerInput } from './share-pack';
+import { unpackPlannerInput } from './share-unpack';
 import {
   SHARED_PLANNER_STATE_VERSION,
   type PackedEncodedSharedPlannerState,
@@ -11,16 +12,22 @@ import {
 
 const { compressToEncodedURIComponent, decompressFromEncodedURIComponent } = LZString;
 
-export function createSharedPlannerState(input: PlannerInput, result: PlannerResult): SharedPlannerState {
-  return buildSharedPlannerState(
-    SHARED_PLANNER_STATE_VERSION,
-    unpackPlannerInput(packPlannerInput(input)),
-    unpackPlannerResult(packPlannerResult(result))
-  );
+function normalizeSharedInput(input: PlannerInput): PlannerInput {
+  return normalizePlannerInputPlaces({
+    ...input,
+    settings: normalizePlannerSettings(input.settings)
+  });
 }
 
-export function encodeSharedPlannerState(input: PlannerInput, result: PlannerResult): string {
-  return compressToEncodedURIComponent(JSON.stringify(createPackedEncodedSharedPlannerState(input, result)));
+export function createSharedPlannerState(input: PlannerInput): SharedPlannerState {
+  return {
+    version: SHARED_PLANNER_STATE_VERSION,
+    input: normalizeSharedInput(unpackPlannerInput(packPlannerInput(input)))
+  };
+}
+
+export function encodeSharedPlannerState(input: PlannerInput): string {
+  return compressToEncodedURIComponent(JSON.stringify(createPackedEncodedSharedPlannerState(input)));
 }
 
 export function decodeSharedPlannerState(value: string): SharedPlannerState | null {
@@ -35,16 +42,19 @@ export function decodeSharedPlannerState(value: string): SharedPlannerState | nu
       return null;
     }
 
-    return buildSharedPlannerState(parsed.version, unpackPlannerInput(parsed.input), unpackPlannerResult(parsed.result));
+    return {
+      version: parsed.version,
+      input: normalizeSharedInput(unpackPlannerInput(parsed.input))
+    };
   } catch {
     return null;
   }
 }
 
-export function buildSharedPlannerPath(input: PlannerInput, result: PlannerResult): string {
-  return `/preview/${encodeSharedPlannerState(input, result)}`;
+export function buildSharedPlannerPath(input: PlannerInput): string {
+  return `/share/${encodeSharedPlannerState(input)}`;
 }
 
-export function buildSharedPlannerUrl(origin: string, input: PlannerInput, result: PlannerResult): string {
-  return new URL(buildSharedPlannerPath(input, result), origin).toString();
+export function buildSharedPlannerUrl(origin: string, input: PlannerInput): string {
+  return new URL(buildSharedPlannerPath(input), origin).toString();
 }

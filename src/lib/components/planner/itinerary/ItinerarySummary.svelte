@@ -3,7 +3,6 @@
 	import {
 		SUMMARY_NOTE_COPY,
 		TIME_AT_PLACES_LABEL,
-		itineraryStatusLabel,
 		routeDataSourceLabel
 	} from '$lib/services/planner/ui-text';
 	import { formatDuration } from '$lib/services/utils';
@@ -54,7 +53,7 @@
 			</p>
 			{#if !previewMode && shareEnabled}
 				<p class="mt-2 text-sm text-amber-900">
-					Share links are serverless and include your hotel, stops, timings, and itinerary data directly in the URL.
+					Saved trip links stay compact by keeping your hotel, stops, trip days, transport choices, and route source in the URL. Journey details are generated on the share page.
 				</p>
 			{/if}
 		</div>
@@ -62,7 +61,7 @@
 </div>
 
 <div class="mt-4 space-y-3">
-	<div class="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+	<div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
 		<div class="summary-card summary-card-primary">
 			<p class="summary-label">Travel Time</p>
 			<p class="summary-value">{formatDuration(result.totalTravelMinutes)}</p>
@@ -74,19 +73,14 @@
 			<p class="summary-note">{SUMMARY_NOTE_COPY.timeAtPlaces}</p>
 		</div>
 		<div class="summary-card summary-card-primary">
-			<p class="summary-label">Trip Days</p>
-			<p class="summary-value">{result.daysUsed} of {result.planningDays.length}</p>
-			<p class="summary-note">{SUMMARY_NOTE_COPY.tripDays}</p>
-		</div>
-		<div class="summary-card summary-card-primary">
 			<p class="summary-label">Predicted Cost</p>
 			<p class="summary-value">{predictedTflCostLabel(result)}</p>
 			<p class="summary-note">{SUMMARY_NOTE_COPY.predictedCost}</p>
 		</div>
 	</div>
 
-	<div class="grid gap-2.5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-stretch">
-		<div class="grid gap-2.5 sm:grid-cols-3">
+	<div class="grid gap-2.5 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)] lg:items-stretch">
+		<div class="grid gap-2.5 sm:grid-cols-2">
 			<div class="summary-card summary-card-secondary">
 				<p class="summary-label">Mode</p>
 				<p class="summary-value summary-value-secondary">{transportPreferenceSummary(result.modeUsed, result.preferencesUsed)}</p>
@@ -94,10 +88,6 @@
 			<div class="summary-card summary-card-secondary">
 				<p class="summary-label">Data Source</p>
 				<p class="summary-value summary-value-secondary">{routeDataSourceLabel(input.settings.dataSource)}</p>
-			</div>
-			<div class="summary-card summary-card-secondary">
-				<p class="summary-label">Status</p>
-				<p class="summary-value summary-value-secondary">{itineraryStatusLabel(result.feasible)}</p>
 			</div>
 		</div>
 
@@ -187,7 +177,7 @@
 				onclick={onCopyShareLink}
 			>
 				<AppIcon path={mdiShareVariantOutline} size={16} decorative={true} />
-				Copy share link
+				Save my trip
 			</button>
 		{/if}
 	</div>

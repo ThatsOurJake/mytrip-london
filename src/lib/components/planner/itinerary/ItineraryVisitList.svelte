@@ -17,6 +17,7 @@
 		legStartTime,
 		lineColourKey,
 		lineDotClass,
+		lineIconClass,
 		lineTextClass,
 		pillTitle,
 		planningDayForIndex,
@@ -143,8 +144,8 @@
 
 				<div class="mt-4 flex flex-wrap items-center gap-2">
 					{#each segment.legs as leg, legIndex}
-						<div title={pillTitle(legLabel(leg), `${formatDuration(leg.minutes)}${detailDistance(leg, distanceUnit) ? ` • ${detailDistance(leg, distanceUnit)}` : ''}`)} class="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm text-slate-800 ring-1 ring-slate-200">
-							<span class={`inline-flex h-7 w-7 items-center justify-center rounded-full ${leg.mode === 'transit' ? 'bg-slate-100 text-slate-900' : leg.mode === 'wait' ? 'bg-amber-50 text-amber-800' : 'bg-brand/10 text-brand'}`}>
+						<div title={pillTitle(legLabel(leg), `${formatDuration(leg.minutes)}${detailDistance(leg, distanceUnit) ? ` • ${detailDistance(leg, distanceUnit)}` : ''}`)} class="inline-flex items-center gap-2 rounded-xl bg-white px-2.5 py-2 text-sm text-slate-800 ring-1 ring-slate-200 sm:px-3">
+							<span class={`inline-flex h-7 w-7 items-center justify-center rounded-full ${leg.mode === 'transit' ? `bg-slate-50 ${lineIconClass(leg)}` : leg.mode === 'wait' ? 'bg-amber-50 text-amber-800' : 'bg-brand/10 text-brand'}`}>
 								<AppIcon path={iconPathForLeg(leg)} size={16} label={legLabel(leg)} />
 							</span>
 							<span class="flex flex-col leading-tight">
@@ -155,9 +156,6 @@
 									{#if transitStopCountLabel(leg)} • {transitStopCountLabel(leg)}{/if}
 								</span>
 							</span>
-							{#if leg.mode === 'transit' && lineColourKey(leg)}
-								<span class={`h-2.5 w-2.5 rounded-full ${lineDotClass(leg)}`}></span>
-							{/if}
 						</div>
 						{#if legIndex < segment.legs.length - 1}
 							<span class="text-slate-400" aria-hidden="true">→</span>
