@@ -1,24 +1,13 @@
 import type { PlannerInput } from '$lib/types/planner';
+import { paletteIndex } from '$lib/services/planner/day-colors';
 import {
   type PackedEncodedSharedPlannerState,
   type PackedPlannerInput,
   SHARED_PLANNER_STATE_VERSION
 } from './share-types';
 
-function compactPlannerInput(input: PlannerInput): PlannerInput {
-  return {
-    ...input,
-    settings: {
-      ...input.settings,
-      planningDays: input.settings.planningDays?.map(({ palette: _palette, ...day }) =>
-        day as NonNullable<PlannerInput['settings']['planningDays']>[number]
-      )
-    }
-  };
-}
-
 export function packPlannerInput(input: PlannerInput): PackedPlannerInput {
-  const compactInput = compactPlannerInput(input);
+  const compactInput = input;
 
   return [
     compactInput.hotel.name,
@@ -51,7 +40,8 @@ export function packPlannerInput(input: PlannerInput): PackedPlannerInput {
         day.date,
         day.dayStart,
         day.dayEnd,
-        day.fullness
+        day.fullness,
+        paletteIndex(day.palette)
       ])
     ]
   ];

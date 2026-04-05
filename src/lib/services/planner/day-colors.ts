@@ -23,6 +23,20 @@ export function paletteForDayIndex(index: number): TripDayPalette {
   return DAY_PALETTE_OPTIONS[index % DAY_PALETTE_OPTIONS.length]?.value ?? 'sky';
 }
 
+export function paletteIndex(value: TripDayPalette | undefined): number {
+  const index = DAY_PALETTE_OPTIONS.findIndex((option) => option.value === value);
+  return index >= 0 ? index : 0;
+}
+
+export function paletteFromIndex(index: number | undefined): TripDayPalette {
+  if (!Number.isInteger(index)) {
+    return DAY_PALETTE_OPTIONS[0]?.value ?? 'blush';
+  }
+
+  const resolvedIndex = index as number;
+  return DAY_PALETTE_OPTIONS[resolvedIndex]?.value ?? DAY_PALETTE_OPTIONS[0]?.value ?? 'blush';
+}
+
 export function getDayPalette(value: TripDayPalette | undefined) {
   return DAY_PALETTE_OPTIONS.find((option) => option.value === value) ?? DAY_PALETTE_OPTIONS[0];
 }

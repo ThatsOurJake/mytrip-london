@@ -1,4 +1,5 @@
 import type { PlannerInput } from '$lib/types/planner';
+import { paletteFromIndex } from '$lib/services/planner/day-colors';
 import {
   packedCoordinates,
   type PackedPlannerInput,
@@ -49,14 +50,14 @@ export function unpackPlannerInput(packed: PackedPlannerInput): PlannerInput {
       dataSource,
       startDate,
       endDate,
-      planningDays: packedPlanningDays?.map(([id, label, date, packedDayStart, packedDayEnd, fullness]) => ({
+      planningDays: packedPlanningDays?.map(([id, label, date, packedDayStart, packedDayEnd, fullness, packedPaletteIndex]) => ({
         id,
         label,
         date,
         dayStart: packedDayStart,
         dayEnd: packedDayEnd,
         fullness,
-        palette: 'blush'
+        palette: paletteFromIndex(packedPaletteIndex)
       }))
     }
   };

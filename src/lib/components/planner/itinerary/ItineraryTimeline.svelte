@@ -55,7 +55,7 @@
 			return;
 		}
 
-		window.location.assign(shareUrl);
+		shareStatus = 'Your browser blocked opening a new tab. Allow pop-ups for this site and try again.';
 	}
 
 	async function toggleMapPanel(): Promise<void> {

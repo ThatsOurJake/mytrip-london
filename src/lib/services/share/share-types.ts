@@ -3,7 +3,7 @@ import type {
   Coordinates
 } from '$lib/types/planner';
 
-export const SHARED_PLANNER_STATE_VERSION = 3;
+export const SHARED_PLANNER_STATE_VERSION = 4;
 
 export interface SharedPlannerState {
   version: number;
@@ -18,7 +18,8 @@ export type PackedPlanningDay = [
   date: string | undefined,
   dayStart: string,
   dayEnd: string,
-  fullness: NonNullable<PlannerInput['settings']['planningDays']>[number]['fullness']
+  fullness: NonNullable<PlannerInput['settings']['planningDays']>[number]['fullness'],
+  paletteIndex: number
 ];
 
 export type PackedPlace = [
